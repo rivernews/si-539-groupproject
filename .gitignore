@@ -1,0 +1,8 @@
+# Add any directories, files, or patterns you don't want to be tracked by version control
+*.pyc
+\_\_pycache\_\_
+db.sqlite3
+local_setting.py
+
+venv_windows/
+venv_mac/

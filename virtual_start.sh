@@ -1,0 +1,1 @@
+. venv_mac/bin/activate
