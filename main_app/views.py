@@ -17,6 +17,7 @@ def index(request):
         row_data_list = []
         nol_to_read = 10
         i = 0
+        print('we got POST request in django')
         with open(csv_filepath, newline='') as csvfile:
             csv_dictreader = csv.DictReader(csvfile)
             for row in csv_dictreader:
