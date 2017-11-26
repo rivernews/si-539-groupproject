@@ -13,7 +13,7 @@ def index(request):
         vars = {'title': 'Home Page la'}
         return render(request,'base.html',vars)
     elif request.method == 'POST':
-        # prepare python dict
+        '''# prepare python dict
         row_data_list = []
         nol_to_read = 10
         i = 0
@@ -33,7 +33,9 @@ def index(request):
                 i += 1
         # convert to json
         # ready to send json
-        return JsonResponse({'data': row_data_list})
+        return JsonResponse({'data': row_data_list})'''
+        print('POST received in Django')
+        return HttpResponse('POST ok.')
         pass
     else:
         return HttpResponse('Not allowed request.')
