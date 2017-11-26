@@ -16,7 +16,14 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-animate.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-aria.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/angular-ui-router/1.0.0-rc.1/angular-ui-router.min.js"></script>
-
+		<script type="text/javascript">
+			var app = angular.module('starterApp', []);
+			// Django CSRF Protection
+			app.config(function ($httpProvider) {
+				$httpProvider.defaults.xsrfCookieName = 'csrftoken';
+				$httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+			});
+		</script>
 		<header>
 			<h1>Backend Demo</h1>
 		</header>
@@ -63,17 +70,6 @@
 			<hr>
 			<p>Wolverine Initiative. All Right Reserved 2017.</p>
 		</footer>
-
-		
-
-		<script type="text/javascript">
-			var app = angular.module('starterApp', []);
-			// Django CSRF Protection
-			app.config(function ($httpProvider) {
-				$httpProvider.defaults.xsrfCookieName = 'csrftoken';
-				$httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
-			});
-		</script>
 
 		<script type="text/javascript" >
 			app.controller("baseController", function($scope, $http){
