@@ -1,0 +1,1 @@
+web: gunicorn si539group.wsgi --log-file -
