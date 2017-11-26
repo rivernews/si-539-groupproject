@@ -5,7 +5,7 @@
 staticfiles
 \_\_pycache\_\_
 db.sqlite3
-local_setting.py
+local_settings.py
 
 venv_windows/
 venv_mac/
