@@ -22,9 +22,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'rs+@)&vi5f68&fy@)@1=w#^2ua_ghe=q*nvce@xaa$h+*x)s=)'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-
 ALLOWED_HOSTS = []
 
 
@@ -137,6 +134,9 @@ try:
     from .local_settings import *
 except Exception as e:
     ################## REMOTE SETTING ####################
+    # SECURITY WARNING: don't run with debug turned on in production!
+    DEBUG = True
+
     print('We are on Heroku! Horray')
     # Parse database configuration from $DATABASE_URL
     import dj_database_url

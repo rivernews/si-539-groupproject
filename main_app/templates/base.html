@@ -106,7 +106,9 @@
 				</tr>
 				{% endfor %}
 			</table>
-			
+			<button data-ng-click="fire_ajax()">
+				Fire Ajax
+			</button>
 		</section>
 		<footer>
 			<hr>
@@ -120,9 +122,11 @@
 				$scope.fire_ajax = function(){
 					$http.post(target_url, {"request_msg": "haha"})
 					.then(function (response) {
-						$scope.fire_events = response.data["data"];
-						console.log($scope.fire_events);
+						console.log("Ajax succeed la!");
+						// $scope.fire_events = response.data["data"];
+						// console.log($scope.fire_events);
 					}, function (xhr, status, err) {
+						console.log("Ajax error la!! Err msg:");
 						console.error(target_url, status, err.toString(), xhr.responseText);
 					});
 				} 	
