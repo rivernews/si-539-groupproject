@@ -29,6 +29,16 @@
 		</header>
 		<section data-ng-controller="baseController">
 			{% verbatim %}
+			{% endverbatim %}
+			Below showcases data we have. These data can be used for different kinds of visualization. Questions to answer:<br>
+			<ul>
+				<li>
+					Each fire event has three names. Which name will you use?
+				</li>
+				<li>
+					What do mean_potential_et and total_precip mean? Do you need them?
+				</li>
+			</ul>
 			<style>
 				table, th, tr {
 					border: 1px solid black;
@@ -37,7 +47,7 @@
 			<table >
 				<tr>
 					<th>
-
+						Event
 					</th>
 					<th>
 						Time (month-19XX)
@@ -48,8 +58,24 @@
 					<th>
 						Size (in acres)
 					</th>
+					<th>
+						Maximum Temperature
+					</th>
+					<th>
+						Wind Speed
+					</th>
+					<th>
+						Name (3 names, have to choose one!)
+					</th>
+					<th>
+						mean_potential_et
+					</th>
+					<th>
+						total_precip
+					</th>
 				</tr>
-				<tr data-ng-repeat="fire in fire_events" >
+				{% for fire in data %}
+				<tr>
 					<th >
 						A Fire Event
 					</th>
@@ -62,9 +88,25 @@
 					<th>
 						{{fire.area}}
 					</th>
+					<th>
+						{{fire.max_temp}}
+					</th>
+					<th>
+						{{fire.wind_speed}}
+					</th>
+					<th>
+						{{fire.name}}
+					</th>
+					<th>
+						{{fire.mean_potential_et}}
+					</th>
+					<th>
+						{{fire.total_precip}}
+					</th>
 				</tr>
+				{% endfor %}
 			</table>
-			{% endverbatim %}
+			
 		</section>
 		<footer>
 			<hr>
@@ -75,13 +117,15 @@
 			app.controller("baseController", function($scope, $http){
 				// send a ajax request!
 				target_url = "/";
-				$http.post(target_url, {"request_msg": "haha"})
-				.then(function (response) {
-					$scope.fire_events = response.data["data"];
-					console.log($scope.fire_events);
-				}, function (xhr, status, err) {
-					console.error(target_url, status, err.toString(), xhr.responseText);
-				});
+				$scope.fire_ajax = function(){
+					$http.post(target_url, {"request_msg": "haha"})
+					.then(function (response) {
+						$scope.fire_events = response.data["data"];
+						console.log($scope.fire_events);
+					}, function (xhr, status, err) {
+						console.error(target_url, status, err.toString(), xhr.responseText);
+					});
+				} 	
 			});
 		</script>
 	</body>
