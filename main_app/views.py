@@ -34,6 +34,13 @@ def getCSVdata():
     # ready to send json
     return row_data_list
 
+def api_get(request):
+    if request.method == 'GET':
+        json_dict = {
+            'data': getCSVdata(),
+        }
+        return JsonResponse(json_dict)
+
 def index(request):
     print("request pre-processing in django")
     if request.method == 'GET':
@@ -42,9 +49,3 @@ def index(request):
             'data': getCSVdata(),
         }
         return render(request,'base.html',vars)
-    elif request.method == 'POST':
-        print('POST received in Django')
-        return HttpResponse('POST ok.')
-        pass
-    else:
-        return HttpResponse('Not allowed request.')

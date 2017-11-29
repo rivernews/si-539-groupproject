@@ -118,9 +118,9 @@
 		<script type="text/javascript" >
 			app.controller("baseController", function($scope, $http){
 				// send a ajax request!
-				target_url = "/";
+				target_url = "get_data";
 				$scope.fire_ajax = function(){
-					$http.post(target_url, {"request_msg": "haha"})
+					$http.get(target_url, {"request_msg": "haha"})
 					.then(function (response) {
 						console.log("Ajax succeed la!");
 						// $scope.fire_events = response.data["data"];
