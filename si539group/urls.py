@@ -18,5 +18,6 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^fire_map/', include('fire_map_app.urls')),
     url(r'^', include('main_app.urls')),
 ]

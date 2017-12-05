@@ -1,0 +1,666 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>539 Project</title>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.39.1/mapbox-gl.css' rel='stylesheet' />
+    <!--  <link rel="stylesheet" href="css/normalize.css" /> -->
+    <link rel="stylesheet" href="{% static 'css/ion.rangeSlider.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/ion.rangeSlider.skinFlat.css' %}" />
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <style type="text/css">
+
+    html { visibility:hidden; }
+
+    body {
+        margin: 0;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+
+    #menu {
+        position: absolute;
+        background: #fff;
+        padding: 20px;
+        font-family: 'Open Sans', sans-serif;
+        display: table;
+        border-spacing: 15px 0px;
+        height: 100%;
+        width: 17%;
+        transition: all 0.4s cubic-bezier(0.85, -0.01, 0.21, 1);
+        z-index: 10;
+    }
+
+    #menu>div {
+        margin-bottom: 20px;
+    }
+
+
+    #map {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+
+    svg {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+
+
+    circle.dot {
+        fill-opacity: 0.5;
+        stroke: lightgrey;
+        stroke-width: 1;
+    }
+
+    circle.dot:hover {
+        cursor: default;
+    }
+
+    .circle_active {
+        fill: yellow;
+        fill-opacity: 0.4;
+    }
+    /* for the slide pages */
+
+    .slide {
+        position: fixed;
+        width: 30%;
+        height: 75vh;
+        top: 10vh;
+        padding: 30px;
+        text-align: center;
+        background-color: rgb(27, 31, 58);
+        opacity: 0;
+        border-radius: 5px;
+        right: -50%;
+        z-index: 2;
+        transition: all 0.8s cubic-bezier(0.71, -0.1, 0.09, 1.07);
+    }
+    /* for the close buttons */
+
+    .close_container {
+        position: absolute;
+        top: .9rem;
+        font-size: 30px;
+    }
+
+    #closeSlide {
+
+        font-size: .5rem;
+        background-color: rgb(27, 31, 58);
+        left: -10;
+        height: 2rem;
+        width: 2rem;
+        border: 0px solid black;
+        z-index: 100;
+        transition: all 0.4s cubic-bezier(0.85, -0.01, 0.21, 1);
+        color: white;
+        font-size: 20px;
+    }
+
+    #closeFilter {
+
+        font-size: .5rem;
+        background-color: white;
+        right: -10;
+        height: 2rem;
+        width: 2rem;
+        border: 0px solid black;
+        z-index: 100;
+        transition: all 0.4s cubic-bezier(0.85, -0.01, 0.21, 1);
+        color: black;
+        font-size: 20px;
+        border-radius: 50%;
+    }
+
+
+    #closeFilter:hover,
+    #closeSlide:hover {
+        cursor: pointer;
+        opacity: 0.4;
+    }
+    /* for container content */
+
+    .detail_container {
+        width: 100%;
+        /*height: 60px;*/
+        top: 30;
+        bottom: 0;
+
+    }
+
+    .detail_item {
+        border: 2px solid #ffffff;
+        height: 8vh;
+        color: white;
+        display: table;
+        width: 100%;
+        border-spacing: 5px 5px;
+        /*border-spacing: 15px 20px;*/
+
+    }
+
+    .detail_item>div {
+        display: table-cell;
+        vertical-align: middle;
+        width: 50%;
+    }
+
+
+    .detail_item img {
+        height: 5vh;
+        width: 100%;
+        object-fit: contain;
+        /*       display:none;*/
+    }
+
+    .detail_item_text {
+        text-align: center;
+    }
+
+
+    @media screen and (max-width: 900px) {
+
+        .slide { width: 50%}
+    }
+
+    @media screen and (max-width: 700px) {
+
+        .slide { width: 70%}
+    }
+    /* for range slider */
+
+    .irs-grid-pol,
+    .irs-grid-text {
+        color: #333333;
+        font-size: 20px;
+    }
+
+
+
+    .irs-grid-pol {
+        background: #333333;
+    }
+
+    #acre_slider .irs-to,
+    #acre_slider .irs-from,
+    #acre_slider .irs-single {
+        font-size: 10px;
+        top: 0px;
+    }
+
+    #place {
+        width: 200px;
+    }
+    /*for filter button */
+
+    #filter_button_container {
+        position: absolute;
+        background: none;
+        padding: 10px;
+        font-family: 'Open Sans', sans-serif;
+        display: table;
+        /*table-layout: fixed;*/
+        border-spacing: 15px 0px;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="map">
+    </div>
+    <div id='filter_button_container'>
+        <button type="button" id='filter_button'>Show filter</button>
+    </div>
+    <!-- adding menu range slider -->
+    <div id='menu'>
+        <div class="close_container" style='right: 1rem;'>
+            <button id='closeFilter' class="close">X</button>
+        </div>
+        <br>
+        <h1> Filter </h1>
+        <div id='filter'>
+        </div>
+        <div id='acre_slider'>
+            <label for='range_AB'> Acres burned: </label>
+            <input type="text" id="range_AB" value="" name="range" />
+        </div>
+        <div>Starting Date:
+            <input type="text" id="datePicker_start">
+        </div>
+        <div>ending Date:
+            <input type="text" id="datePicker_end">
+        </div>
+        <div>
+            <button type="button" id='submit_button'>Submit!</button>
+        </div>
+    </div>
+    <!-- adding slides -->
+    <div class="slide">
+        <div class='close_container' style='left: 1rem;'>
+            <button id='closeSlide'>X</button>
+        </div>
+        <h1 style="color:white">Fire Information</h1>
+        <div class='detail_container'>
+            <div class="detail_item">
+                <div id='date_img'>
+                    <img src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAxMjkgMTI5IiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAxMjkgMTI5IiB3aWR0aD0iMjU2cHgiIGhlaWdodD0iMjU2cHgiPgogIDxnPgogICAgPGc+CiAgICAgIDxwYXRoIGQ9Im0xMC41LDExOC4xaDEwNy45YzIuMywwIDQuMS0xLjggNC4xLTQuMXYtOTEuNWMwLTIuMy0xLjgtNC4xLTQuMS00LjFoLTIwLjN2LTMuNWMwLTIuMy0xLjgtNC4xLTQuMS00LjEtMi4zLDAtNC4xLDEuOC00LjEsNC4xdjMuNWgtNTAuMnYtMy41YzAtMi4zLTEuOC00LjEtNC4xLTQuMS0yLjMsMC00LjEsMS44LTQuMSw0LjF2My41aC0yMWMtMi4zLDAtNC4xLDEuOC00LjEsNC4xdjkxLjZjMCwyLjIgMS45LDQgNC4xLDR6bTQuMS05MS41aDE2Ljl2Mi4yYzAsMi4zIDEuOCw0LjEgNC4xLDQuMSAyLjMsMCA0LjEtMS44IDQuMS00LjF2LTIuMmg1MC4ydjIuMmMwLDIuMyAxLjgsNC4xIDQuMSw0LjEgMi4zLDAgNC4xLTEuOCA0LjEtNC4xdi0yLjJoMTYuM3YxMC42aC05OS44di0xMC42em0wLDE4LjhoOTkuN3Y2NC42aC05OS43di02NC42eiIgZmlsbD0iI0ZGRkZGRiIvPgogICAgICA8cGF0aCBkPSJtOTQsNjQuMmgtNTljLTIuMywwLTQuMSwxLjgtNC4xLDQuMSAwLDIuMyAxLjgsNC4xIDQuMSw0LjFoNTljMi4zLDAgNC4xLTEuOCA0LjEtNC4xIDAtMi4zLTEuOC00LjEtNC4xLTQuMXoiIGZpbGw9IiNGRkZGRkYiLz4KICAgICAgPHBhdGggZD0ibTY0LjUsODRoLTI5LjVjLTIuMywwLTQuMSwxLjgtNC4xLDQuMSAwLDIuMyAxLjgsNC4xIDQuMSw0LjFoMjkuNWMyLjMsMCA0LjEtMS44IDQuMS00LjEgMC0yLjMtMS44LTQuMS00LjEtNC4xeiIgZmlsbD0iI0ZGRkZGRiIvPgogICAgPC9nPgogIDwvZz4KPC9zdmc+Cg==" /> Date
+                </div>
+                <div id='date' class='detail_item_text'></div>
+            </div>
+            <div class="detail_item">
+                <div id='location_img'>
+                    <img src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTYuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjI1NnB4IiBoZWlnaHQ9IjI1NnB4IiB2aWV3Qm94PSIwIDAgNDg1LjIxMSA0ODUuMjEiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDQ4NS4yMTEgNDg1LjIxOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+CjxnPgoJPHBhdGggZD0iTTE5OC4wMDgsMzEzLjc2N2wxMS4yNTIsMjguMTM4Yy0xMC44OTcsNC4zNTQtMjEuNzY1LDcuNjcyLTMyLjM2OCw5Ljg5bC02LjE5MS0yOS42NjkgICBDMTc5LjU4NywzMjAuMjUzLDE4OC43NjcsMzE3LjQ0NCwxOTguMDA4LDMxMy43Njd6IE0xMDcuNzcsMzUwLjEwOWMxMS4xMDUsMy4xOTcsMjIuODA2LDQuOTE1LDM0Ljc2OCw1LjA5MmwwLjQ3Ni0zMC4zMjIgICBjLTkuMzAxLTAuMTUzLTE4LjMzMy0xLjQ1MS0yNi44NjEtMy45MDZMMTA3Ljc3LDM1MC4xMDl6IE0zNDYuNTUyLDI5Ny4xODRjOC43NDEsMS43MjMsMTcuMjY4LDQuNzE0LDI1LjM1Miw4Ljg4N2wxMy45MjctMjYuOTQ4ICAgYy0xMC42NjUtNS40NzktMjEuODg5LTkuNDE4LTMzLjQxMi0xMS42NzJMMzQ2LjU1MiwyOTcuMTg0eiBNMjgzLjI5NCwyNzIuMzA5bDkuMDY4LDI4LjkwM2M5LjI2NC0yLjkwMywxOC40MjEtNC43MzcsMjcuMjQxLTUuNDQ3ICAgbC0yLjQyMi0zMC4yMDlDMzA2LjEwMiwyNjYuNDQ3LDI5NC43LDI2OC43MjksMjgzLjI5NCwyNzIuMzA5eiBNMjM0LjYxMSwyOTUuMTEzYy0zLjQwNCwyLjEzMy02Ljc1Myw0LjA4My0xMC4wNDEsNS45MjIgICBsMTQuNzUsMjYuNDgxYzMuNzAxLTIuMDgyLDcuNDkxLTQuMjY2LDExLjI4LTYuNjM3YzUuMjE0LTMuMjI5LDEwLjMxLTYuMTA0LDE1LjMxMy04LjY1M2wtMTMuNzczLTI3LjAwNCAgIEMyNDYuNDU3LDI4OC4xMjUsMjQwLjU5LDI5MS40MTIsMjM0LjYxMSwyOTUuMTEzeiBNMzE4LjQyMywxMDYuMTRjMCwxMi4zNzktMi45NjgsMjQuMTA3LTguMjM3LDM0LjQxNWwtNjcuNTc5LDEzMi4zNzQgICBjMCwwLTY4LjExNC0xMzMuNDc0LTY4LjM4LTEzNC4wMzNjLTQuNzctOS44OTItNy40MzItMjEuMDI4LTcuNDMyLTMyLjc1NmMwLTQxLjg3NSwzMy45MzctNzUuODE0LDc1LjgxMi03NS44MTQgICBDMjg0LjQ3OSwzMC4zMjYsMzE4LjQyMyw2NC4yNjUsMzE4LjQyMywxMDYuMTR6IE0yODguMDk3LDEwNi4xNGMwLTI1LjExNC0yMC4zNzctNDUuNDktNDUuNDktNDUuNDkgICBjLTI1LjExNCwwLTQ1LjQ5LDIwLjM3Ni00NS40OSw0NS40OWMwLDI1LjExMSwyMC4zNzYsNDUuNDg3LDQ1LjQ5LDQ1LjQ4N0MyNjcuNzIsMTUxLjYyNywyODguMDk3LDEzMS4yNTEsMjg4LjA5NywxMDYuMTR6ICAgIE0zOTQuMjM1LDE4MS45NTRoLTcxLjEzMWwtMTUuNDk1LDMwLjMyN2g2NC43N2wzMi43MjYsOTguMjA1bC0xMC40NTQsMTEuNTUxYzExLjEzNiwxMC4wNjIsMTYuOTA5LDE5LjMzNiwxNi45NDEsMTkuMzY4ICAgbDMuMTk3LTEuOTIzbDI4LjM0Myw4NS4wNzZINDIuMDUzbDMwLjM4Ny05MS4wNjNjMS4wNjYsMC43NDEsMS44OTMsMS40NTEsMy4wNzgsMi4xODhsMTYuMTEzLTI1LjY0NiAgIGMtMy42MTQtMi4yODItNi41NzYtNC41MzItOS4xODMtNi42MzJsMzAuMzg4LTkxLjEyNWg2NC43OTVjLTYuNDI3LTEyLjU1OS0xMS40OTEtMjIuNDc3LTE1LjQ4OC0zMC4zMjdIOTAuOTc4TDAsNDU0Ljg4NWg0ODUuMjExICAgTDM5NC4yMzUsMTgxLjk1NHoiIGZpbGw9IiNGRkZGRkYiLz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K" /> Location
+                </div>
+                <div id='location' class='detail_item_text'></div>
+            </div>
+            <div class="detail_item">
+                <div id='burned_img'>
+                    <img src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0ZWQgYnkgSWNvTW9vbi5pbyAtLT4KPCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHdpZHRoPSIyNTZweCIgaGVpZ2h0PSIyNTZweCIgdmlld0JveD0iMCAwIDE2IDE2Ij4KPHBhdGggZmlsbD0iI0ZGRkZGRiIgZD0iTTQuOSAxNS44YzAgMC0zLjktMC40LTMuOS01LjcgMC00LjEgMy4xLTYuNSAzLjEtNi41czEuMyAxLjQgMi4zIDEuOWMxIDAuNiAxLjQtNS41IDEuNC01LjVzNy4yIDMuOSA3LjIgOS44YzAgNi4xLTQgNS45LTQgNS45czEuOC0yLjQgMS44LTUuMmMwLTMtMy45LTYuNy0zLjktNi43cy0wLjUgNC40LTIuMSA1Yy0xLjYtMC45LTIuNS0yLjMtMi41LTIuM3MtMy43IDUuOCAwLjYgOS4zeiIvPgo8cGF0aCBmaWxsPSIjRkZGRkZGIiBkPSJNOC4yIDE2LjFjLTItMC4xLTMuNy0xLjQtMy43LTMuMnMwLjctMi42IDAuNy0yLjYgMC41IDEgMS4xIDEuNSAxLjggMC44IDIuNCAwLjFjMC42LTAuNiAwLjgtMi4zIDAuOC0yLjNzMS40IDEuMSAxLjIgM2MtMC4xIDItMC45IDMuNS0yLjUgMy41eiIvPgo8L3N2Zz4K" /> 
+                    Burn
+                </div>
+                <div id='burned' class='detail_item_text'></div>
+            </div>
+            <div class="detail_item">
+                <div id='wind_speed_img'>
+                    <img src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMS4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDMwOS4xMTggMzA5LjExOCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMzA5LjExOCAzMDkuMTE4OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgd2lkdGg9IjI1NnB4IiBoZWlnaHQ9IjI1NnB4Ij4KPGc+Cgk8cGF0aCBkPSJNMjExLjA0NCwxNzAuMTYzYy0wLjk4MywwLTEuOTQ3LTAuMDE5LTIuOTE4LTAuMDY0TDYuNDQsMTcwLjE2M2MtMy41NTQsMC02LjQyNy0yLjg3My02LjQyNy02LjQyNyAgIGMwLTMuNTQ4LDIuODczLTYuNDI3LDYuNDI3LTYuNDI3bDIwMS45Ny0wLjA1OGMxLjA2LDAuMDM5LDEuODQ0LDAuMDU4LDIuNjQxLDAuMDU4YzMwLjI1OCwwLDU0Ljg3Mi0yNC42MTUsNTQuODcyLTU0Ljg3MiAgIGMwLTMwLjI1MS0yNC42MTUtNTQuODY2LTU0Ljg3Mi01NC44NjZjLTMwLjI1MSwwLTU0Ljg2NiwyNC42MTUtNTQuODY2LDU0Ljg2NmMwLDcuNDQyLDEuNDY1LDE0LjY1Myw0LjMzOCwyMS40MjcgICBjMS4zOTUsMy4yNzEtMC4xMzUsNy4wNDQtMy4zOTMsOC40MzJjLTMuMjcxLDEuNDAxLTcuMDUtMC4xMzUtOC40MzItMy4zOTNjLTMuNTYtOC4zNzQtNS4zNjYtMTcuMjc1LTUuMzY2LTI2LjQ1OSAgIGMwLTM3LjM0LDMwLjM4LTY3LjcyLDY3LjcyLTY3LjcyczY3LjcyNiwzMC4zODYsNjcuNzI2LDY3LjcyQzI3OC43NywxMzkuNzg0LDI0OC4zODQsMTcwLjE2MywyMTEuMDQ0LDE3MC4xNjN6IE0zMDkuMTE4LDIyNy44MDYgICBjMC0yNS42OTQtMjAuOS00Ni41OTUtNDYuNTk1LTQ2LjU5NWMtMC42NzUsMC0xLjM0MywwLjAxMy0xLjczNSwwLjAzOUw2LjQzMywxODEuMjExbDAsMGMtMy41NDgsMC02LjQyNywyLjg3My02LjQyNyw2LjQyNyAgIGMwLDMuNTQ4LDIuODc5LDYuNDI3LDYuNDI3LDYuNDI3bDI1NC42MzEsMC4wMzJsMS40NTktMC4wMzJjMTguNjA2LDAsMzMuNzQxLDE1LjEzNSwzMy43NDEsMzMuNzQxcy0xNS4xMzUsMzMuNzQxLTMzLjc0MSwzMy43NDEgICBjLTE4LjYwNiwwLTMzLjc0MS0xNS4xMzUtMzMuNzQxLTMzLjc0MWMwLTQuNTgyLDAuOS05LjAxLDIuNjY3LTEzLjE3NWMxLjM5NS0zLjI2NS0wLjEzNS03LjA0NC0zLjM5My04LjQzMiAgIGMtMy4yNjUtMS40MDEtNy4wMzcsMC4xMjItOC40MzIsMy4zOTNjLTIuNDU1LDUuNzU4LTMuNjk1LDExLjg5LTMuNjk1LDE4LjIwN2MwLDI1LjY5NCwyMC45LDQ2LjU5NSw0Ni41OTUsNDYuNTk1ICAgQzI4OC4yMTgsMjc0LjM5NCwzMDkuMTE4LDI1My41LDMwOS4xMTgsMjI3LjgwNnogTTYuNDMzLDE0NS4wNmw3NS4zMjktMC4wMjZsMS40NzIsMC4wMjZjMjAuNTQ3LDAsMzcuMjY5LTE2LjcyMywzNy4yNjktMzcuMjY5ICAgcy0xNi43MjMtMzcuMjY5LTM3LjI2OS0zNy4yNjljLTIwLjU1MywwLTM3LjI3NiwxNi43MjMtMzcuMjc2LDM3LjI2OWMwLDUuMDUxLDAuOTksOS45NTUsMi45NTYsMTQuNTcgICBjMS4zODgsMy4yNjUsNS4xNzQsNC43NjksOC40MzIsMy4zOTNjMy4yNjUtMS4zOTUsNC43ODgtNS4xNjcsMy4zOTMtOC40MzJjLTEuMjc5LTMuMDE0LTEuOTI4LTYuMjE1LTEuOTI4LTkuNTMxICAgYzAtMTMuNDY0LDEwLjk1MS0yNC40MTYsMjQuNDIyLTI0LjQxNmMxMy40NjQsMCwyNC40MTYsMTAuOTUxLDI0LjQxNiwyNC40MTZzLTEwLjk1MSwyNC40MTYtMjQuNDE2LDI0LjQxNmwtMS4zMy0wLjAyNiAgIGwtNzUuNDc3LDAuMDI2Yy0zLjU0OCwwLTYuNDI3LDIuODc5LTYuNDI3LDYuNDI3QzAuMDA2LDE0Mi4xODcsMi44ODYsMTQ1LjA2LDYuNDMzLDE0NS4wNkw2LjQzMywxNDUuMDZ6IE0xMDMuOTA5LDIxMy42MTUgICBjMC0zLjU1NC0yLjg3My02LjQyNy02LjQyNy02LjQyN0g2LjQzM2MtMy41NDgsMC02LjQyNywyLjg3My02LjQyNyw2LjQyN3MyLjg3OSw2LjQyNyw2LjQyNyw2LjQyN2g5MS4wNDkgICBDMTAxLjAzNiwyMjAuMDQyLDEwMy45MDksMjE3LjE2OSwxMDMuOTA5LDIxMy42MTV6IiBmaWxsPSIjRkZGRkZGIi8+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPC9zdmc+Cg==" />
+                    Wind Speed
+                </div>
+                <div id='wind_speed' class='detail_item_text'></div>
+            </div>
+            <div class="detail_item">
+                <div id='air_temp_img'>
+                    <img src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMS4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDMwMS42MDUgMzAxLjYwNSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMzAxLjYwNSAzMDEuNjA1OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgd2lkdGg9IjI1NnB4IiBoZWlnaHQ9IjI1NnB4Ij4KPGc+Cgk8cGF0aCBkPSJNMjM2Ljg5NiwzOC4zNzV2MTIuODU0aC00OS44MDhWMzguMzc1SDIzNi44OTZ6IE0yMTYuMDA5LDY2LjM4OWgtMjguOTIxdjEyLjg1NGgyOC45MjFWNjYuMzg5eiBNMTg3LjA4OCwxMDcuMjU3aDQ5LjgwOCAgIFY5NC40MDRoLTQ5LjgwOFYxMDcuMjU3eiBNMjE2LjAwOSwxMjIuNDI1aC0yOC45MjF2MTIuODU0aDI4LjkyMVYxMjIuNDI1eiBNMTg3LjA4OCwxNjMuMjkzaDQ5LjgwOHYtMTIuODU0aC00OS44MDhWMTYzLjI5M3ogICAgTTE5NC44NTIsMjM2LjUzM2MwLDM1Ljg4MS0yOS4xOTEsNjUuMDcyLTY1LjA3Miw2NS4wNzJzLTY1LjA3Mi0yOS4xOTEtNjUuMDcyLTY1LjA3MmMwLTIzLjI1MiwxMi4yMTEtNDQuMzg0LDMyLjEzNC01Ni4wNzQgICBWMzIuOTM4Qzk2Ljg0MywxNC43NzUsMTExLjYxOCwwLDEyOS43OCwwczMyLjkzOCwxNC43NzUsMzIuOTM4LDMyLjkzOHYxNDcuNTIyQzE4Mi42NDEsMTkyLjEzNywxOTQuODUyLDIxMy4yNzUsMTk0Ljg1MiwyMzYuNTMzeiAgICBNMTgxLjk5OCwyMzYuNTMzYzAtMTkuNzMtMTAuOTY0LTM3LjU2NS0yOC42MTktNDYuNTNsLTMuNTE1LTEuNzg3VjMyLjk0NGMwLTExLjA4LTkuMDEtMjAuMDg0LTIwLjA4NC0yMC4wODQgICBjLTExLjA3MywwLTIwLjA4NCw5LjAwNC0yMC4wODQsMjAuMDg0djE1NS4yNzJsLTMuNTE1LDEuNzg3Yy0xNy42NTUsOC45NzItMjguNjE5LDI2LjgwNi0yOC42MTksNDYuNTMgICBjMCwyOC43OTIsMjMuNDI2LDUyLjIxOCw1Mi4yMTgsNTIuMjE4UzE4MS45OTgsMjY1LjMyNSwxODEuOTk4LDIzNi41MzN6IE0xNzEuMjkxLDIzNi41MzNjMCwyMi44ODYtMTguNjE5LDQxLjUwNS00MS41MTEsNDEuNTA1ICAgYy0yMi44ODYsMC00MS41MDUtMTguNjE5LTQxLjUwNS00MS41MDVjMC0xOC43NiwxMi42NzQtMzUuMjMyLDMwLjgyMy00MC4wNThsMi4zODQtMC42MzZ2LTM3LjUwMWgxNi42MDF2MzcuNDk0bDIuMzg0LDAuNjQzICAgQzE1OC42MjQsMjAxLjMwMSwxNzEuMjkxLDIxNy43OCwxNzEuMjkxLDIzNi41MzN6IE0xMzEuODM3LDIwOC44NjZjLTAuOTktNC4zOTYtNS40MTEtNy4yODgtOS45MTctNi4yNiAgIGMtMTUuNzMzLDMuNTYtMjYuNzIzLDE3LjMyLTI2LjcyMywzMy40NjVjMCw0LjU2OSwzLjcyMSw4LjI5MSw4LjI5MSw4LjI5MXM4LjI5MS0zLjcyMSw4LjI5MS04LjI5MSAgIGMwLTguMjA3LDUuNzk3LTE1LjQ4MiwxMy43OTgtMTcuMjg4QzEzMC4wMjQsMjE3Ljc2LDEzMi44MzksMjEzLjMxMywxMzEuODM3LDIwOC44NjZ6IiBmaWxsPSIjRkZGRkZGIi8+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPC9zdmc+Cg==" />
+                    Temperture
+                </div>
+                <div id='air_temp' class='detail_item_text'>
+                </div>
+            </div>
+            <div class="detail_item">
+                <div id='precip_img'>
+                    <img src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDMzLjA2MiAzMy4wNjIiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDMzLjA2MiAzMy4wNjI7IiB4bWw6c3BhY2U9InByZXNlcnZlIiB3aWR0aD0iMjU2cHgiIGhlaWdodD0iMjU2cHgiPgo8Zz4KCTxnPgoJCTxwYXRoIGQ9Ik0yNS42MTUsMjIuMzI0Yy0wLjI3NiwwLTAuNS0wLjIyNC0wLjUtMC41czAuMjI0LTAuNSwwLjUtMC41YzMuNTU1LDAsNi40NDYtMi44OTIsNi40NDYtNi40NDYgICAgYzAtMy41NTMtMi44OTItNi40NDMtNi40NDYtNi40NDNjLTAuMjk4LDAtMC42MTMsMC4wMjYtMC45OTEsMC4wODNjLTAuMjE0LDAuMDMzLTAuNDI2LTAuMDc5LTAuNTIyLTAuMjczICAgIEMyMi41NTgsNS4xMTQsMTkuNDQsMy4xNywxNS45NjUsMy4xN2MtNC4xODQsMC03LjgwNCwyLjgzOS04LjgwNCw2LjkwNGMtMC4wNTYsMC4yMjgtMC4yNzgsMC4zNzMtMC40OTgsMC4zOGwtMC4xMjctMC4wMDcgICAgYy0wLjAwMywwLTAuMDA2LDAtMC4wMDksMEMzLjQzNywxMC40NDcsMSwxMi44ODYsMSwxNS44ODRjMCwzLDIuNDQxLDUuNDQsNS40NDIsNS40NGMwLjI3NiwwLDAuNSwwLjIyNCwwLjUsMC41ICAgIHMtMC4yMjQsMC41LTAuNSwwLjVDMi44OSwyMi4zMjQsMCwxOS40MzUsMCwxNS44ODRjMC0zLjUwMiwyLjgxLTYuMzYxLDYuMjk0LTYuNDRjMS4yNDEtNC4zMDMsNS4xNjEtNy4yNzQsOS42Ny03LjI3NCAgICBjMy43MzgsMCw3LjEwNCwyLjAyNiw4Ljg2OSw1LjMxMWMwLjI4LTAuMDMxLDAuNTM0LTAuMDQ2LDAuNzgxLTAuMDQ2YzQuMTA2LDAsNy40NDYsMy4zMzksNy40NDYsNy40NDMgICAgQzMzLjA2MiwxOC45ODQsMjkuNzIxLDIyLjMyNCwyNS42MTUsMjIuMzI0eiIgZmlsbD0iI0ZGRkZGRiIvPgoJCTxwYXRoIGQ9Ik0yNS42MTUsMjIuMzI0Yy0wLjI3NiwwLTAuNS0wLjIyNC0wLjUtMC41czAuMjI0LTAuNSwwLjUtMC41YzMuNTU1LDAsNi40NDYtMi44OTIsNi40NDYtNi40NDYgICAgYzAtMy41NTMtMi44OTItNi40NDMtNi40NDYtNi40NDNjLTEuODYyLDAtMy42MzMsMC44MDUtNC44NTgsMi4yMDhjLTAuMTgxLDAuMjA5LTAuNDk3LDAuMjMtMC43MDUsMC4wNDggICAgYy0wLjIwOC0wLjE4MS0wLjIyOS0wLjQ5Ny0wLjA0OC0wLjcwNWMxLjQxNC0xLjYyMSwzLjQ1OS0yLjU1LDUuNjExLTIuNTVjNC4xMDYsMCw3LjQ0NiwzLjMzOSw3LjQ0Niw3LjQ0MyAgICBDMzMuMDYyLDE4Ljk4NCwyOS43MjEsMjIuMzI0LDI1LjYxNSwyMi4zMjR6IiBmaWxsPSIjRkZGRkZGIi8+Cgk8L2c+Cgk8Zz4KCQk8cGF0aCBkPSJNOC4yNzUsMzAuODkyYy0wLjA1MSwwLTAuMTAyLTAuMDA4LTAuMTUzLTAuMDI0Yy0wLjI2My0wLjA4NC0wLjQwNy0wLjM2Ni0wLjMyMy0wLjYyOWwwLjkxOC0yLjg1NSAgICBjMC4wODUtMC4yNjMsMC4zNjgtMC40MDcsMC42MjktMC4zMjNjMC4yNjMsMC4wODQsMC40MDgsMC4zNjYsMC4zMjMsMC42MjlsLTAuOTE4LDIuODU2QzguNjgzLDMwLjc1Nyw4LjQ4NiwzMC44OTIsOC4yNzUsMzAuODkyeiAgICAgTTEwLjExMiwyNS4xOGMtMC4wNTEsMC0wLjEwMi0wLjAwOC0wLjE1My0wLjAyNGMtMC4yNjMtMC4wODQtMC40MDgtMC4zNjYtMC4zMjMtMC42MjlsMC45MTgtMi44NTYgICAgYzAuMDg1LTAuMjYzLDAuMzY2LTAuNDA1LDAuNjI5LTAuMzIzYzAuMjYzLDAuMDg0LDAuNDA3LDAuMzY2LDAuMzIzLDAuNjI5bC0wLjkxOCwyLjg1NkMxMC41MiwyNS4wNDUsMTAuMzI0LDI1LjE4LDEwLjExMiwyNS4xOHogICAgIiBmaWxsPSIjRkZGRkZGIi8+Cgk8L2c+Cgk8Zz4KCQk8cGF0aCBkPSJNMTguMjc1LDMwLjg5MmMtMC4wNTEsMC0wLjEwMi0wLjAwOC0wLjE1My0wLjAyNGMtMC4yNjMtMC4wODQtMC40MDctMC4zNjYtMC4zMjMtMC42MjlsMC45MTgtMi44NTUgICAgYzAuMDg1LTAuMjYzLDAuMzY4LTAuNDA3LDAuNjI5LTAuMzIzYzAuMjYzLDAuMDg0LDAuNDA4LDAuMzY2LDAuMzIzLDAuNjI5bC0wLjkxOCwyLjg1NiAgICBDMTguNjgzLDMwLjc1NywxOC40ODYsMzAuODkyLDE4LjI3NSwzMC44OTJ6IE0yMC4xMTIsMjUuMThjLTAuMDUxLDAtMC4xMDItMC4wMDgtMC4xNTMtMC4wMjQgICAgYy0wLjI2My0wLjA4NC0wLjQwOC0wLjM2Ni0wLjMyMy0wLjYyOWwwLjkxOC0yLjg1NmMwLjA4NS0wLjI2MywwLjM2Ni0wLjQwNSwwLjYyOS0wLjMyM2MwLjI2MywwLjA4NCwwLjQwNywwLjM2NiwwLjMyMywwLjYyOSAgICBsLTAuOTE4LDIuODU2QzIwLjUyLDI1LjA0NSwyMC4zMjQsMjUuMTgsMjAuMTEyLDI1LjE4eiIgZmlsbD0iI0ZGRkZGRiIvPgoJPC9nPgoJPGc+CgkJPHBhdGggZD0iTTEzLjI3NSwzMC44OTJjLTAuMDUxLDAtMC4xMDItMC4wMDgtMC4xNTMtMC4wMjRjLTAuMjYzLTAuMDg0LTAuNDA3LTAuMzY2LTAuMzIzLTAuNjI5bDAuOTE4LTIuODU1ICAgIGMwLjA4NS0wLjI2MywwLjM2OC0wLjQwNywwLjYyOS0wLjMyM2MwLjI2MywwLjA4NCwwLjQwOCwwLjM2NiwwLjMyMywwLjYyOWwtMC45MTgsMi44NTYgICAgQzEzLjY4MywzMC43NTcsMTMuNDg2LDMwLjg5MiwxMy4yNzUsMzAuODkyeiBNMTUuMTEyLDI1LjE4Yy0wLjA1MSwwLTAuMTAyLTAuMDA4LTAuMTUzLTAuMDI0ICAgIGMtMC4yNjMtMC4wODQtMC40MDgtMC4zNjYtMC4zMjMtMC42MjlsMC45MTgtMi44NTZjMC4wODUtMC4yNjMsMC4zNjYtMC40MDUsMC42MjktMC4zMjNjMC4yNjMsMC4wODQsMC40MDcsMC4zNjYsMC4zMjMsMC42MjkgICAgbC0wLjkxOCwyLjg1NkMxNS41MiwyNS4wNDUsMTUuMzI0LDI1LjE4LDE1LjExMiwyNS4xOHoiIGZpbGw9IiNGRkZGRkYiLz4KCTwvZz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K" />
+                    Precipitation
+                </div>
+                <div id='precip' class='detail_item_text'></div>
+            </div>
+        </div>
+    </div>
+    <!--<div class="legend">-->
+    <!--<h4>Trips</h4>-->
+    <!--</div>-->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.39.1/mapbox-gl.js'></script>
+    <script src="http://d3js.org/colorbrewer.v1.min.js"></script>
+    <!-- <script src="https://momentjs.com/downloads/moment.js"></script> -->
+    <script src="{% static 'js/ion.rangeSlider.js' %}"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript">
+    ///////////////////////initiate//////////////////////////////////////////////////
+
+    // change projection based on the windows width
+    var project_center=[-102, 35.09]
+    var project_zoom=3.7
+    if ($(window).width()< 992) {
+        project_center=[-95, 35.09]
+        if ($(window).width()< 850) {
+            project_zoom=3
+        }
+        if ($(window).width()< 500) {
+            project_zoom=2.7
+        }
+    }
+
+
+
+    //// show page after loading //
+     $(document).ready(function() {
+      document.getElementsByTagName("html")[0].style.visibility = "visible";
+    });
+
+    // defining date picker in the filter
+    $("#datePicker_start").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        yearRange: '1984:2015',
+        dateFormat: 'dd-mm-yy',
+        defaultDate: new Date(1984, 01, 01)
+    });
+    $("#datePicker_end").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        yearRange: '1984:2015',
+        dateFormat: 'dd-mm-yy',
+        defaultDate: new Date(2015, 12, 31)
+    });
+    $("#datePicker_start").datepicker("setDate", new Date(1984, 01, 01));
+    $("#datePicker_end").datepicker("setDate", new Date(2015, 12, 31));
+
+    // defining range slider in the filter
+    $("#range_AB").ionRangeSlider({
+        hide_min_max: true,
+        keyboard: true,
+        min: 500,
+        max: 1190000,
+        from: 500,
+        to: 1190000,
+        type: 'double',
+        step: 100,
+        postfix: " ac",
+    });
+
+    // adding buttons listener
+    $("#filter_button").click(function() { $('#menu').css('left', '0') })
+    $('#closeFilter').click(function() { $('#menu').css('left', '-80%'); })
+
+
+
+    // draw map using mapbox
+    mapboxgl.accessToken = "pk.eyJ1IjoiY2hlbnNpY3VuOTQiLCJhIjoiY2oydW9yd3B1MDAwMzJ3bW53Y3Y3anRxbSJ9.J1Sk-CzKWF3Ww51X52_FQQ";
+
+    var map = new mapboxgl.Map({
+        container: 'map', // container id
+        style: 'mapbox://styles/mapbox/outdoors-v9', // stylesheet location
+        center: project_center, // starting position [lng, lat]
+        zoom: project_zoom, // starting zoom
+        minZoom: 0.5,
+        pitch: 45,
+        bearing: -20
+    });
+
+
+    map.addControl(new mapboxgl.NavigationControl());
+    var container = map.getCanvasContainer();
+
+    // add svg above map
+    var svg = d3.select(container).append("svg");
+
+
+    statesList = [
+
+        'ALL', 'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado',
+        'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho',
+        'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',
+        'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
+        'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada',
+        'New Hampshire', 'New Jersey', 'New Mexico', 'New York',
+        'North Carolina', 'North Dakota', 'Ohio',
+        'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island',
+        'South  Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah',
+        'Vermont', 'Virginia', 'Washington', 'West Virginia',
+        'Wisconsin', 'Wyoming'
+    ]
+
+    // change css if window size change
+    $(window).resize(function() { checkWidth() });
+    checkWidth()
+
+
+
+    // $("#submit_button").click(function() {
+
+    //      var url = 'url/map.html?place=' + $( "#place" ).val() 
+    //      + '&ABmin=' + $('#range_AB').data().from + '&ABmax=' + $('#range_AB').data().to
+    //      + '&Dayfrom=' + moment($('#range').data().from,"X").format("YYYY-MM-DD") 
+    //      + '&Dayto=' + moment($('#range').data().to,"X").format("YYYY-MM-DD")
+
+    //      alert(url)
+    //     // load adjex function
+
+    // });
+
+
+
+    ///////////////////////start loading wildfire data//////////////////////////////////////////////
+
+    //////// change to ajax later ////
+    d3.csv("{% static 'output.csv' %}", function(err, data) {
+        // making drop down //
+        generateDropdown(statesList, 'states', 'states', 'states')
+
+        // save the min and max of the acres_burned
+        allMin = d3.min(data, function(d) { return +d.acres_burned; })
+        allMax = d3.max(data, function(d) { return +d.acres_burned; })
+        console.log(allMin, allMax)
+        drawCircle(data, allMin, allMax)
+
+
+        // when submit button is clicked, then filter data
+        $("#submit_button").click(function() {
+
+
+            // filter by state and arc 
+            var data2 = data.filter(function(d) {
+
+                if ($("#states").val() != 'ALL') {
+                    if (d["states"] == $("#states").val() && (+d['acres_burned'] >= (+$('#range_AB').data().from) && +d['acres_burned'] <= (+$('#range_AB').data().to))) { return d }
+                } else {
+                    if (+d['acres_burned'] >= (+$('#range_AB').data().from) && +d['acres_burned'] <= (+$('#range_AB').data().to)) {
+                        return d
+                    }
+                }
+
+            })
+
+            // filter by date
+
+            //Datato = new Date(moment($('#range').data().to, "X").format("YYYY-MM-DD"));
+            //Datafrom = new Date(moment($('#range').data().from, "X").format("YYYY-MM-DD"));
+            Datato = $('#datePicker_end').datepicker("getDate")
+            Datafrom = $('#datePicker_start').datepicker("getDate")
+            console.log(Datato, Datafrom)
+
+            data2 = data2.filter(function(d) {
+                var itemdate = new Date(d['year'] + '-' + d['month'] + '-' + d['day']);
+                return itemdate >= Datafrom && itemdate <= Datato
+            })
+
+            // fake url
+
+            // var url = 'url/map.html?states=' + $("#states").val() +
+            //     '&ABmin=' + $('#range_AB').data().from + '&ABmax=' + $('#range_AB').data().to +
+            //     '&Dayfrom=' + moment($('#range').data().from, "X").format("YYYY-MM-DD") +
+            //     '&Dayto=' + moment($('#range').data().to, "X").format("YYYY-MM-DD")
+
+            // hide the slide when the submit is clicked
+            slideHide()
+            // draw circle
+            drawCircle(data2, allMin, allMax)
+
+        });
+
+    });
+
+    ///////////////////////functions//////////////////////////////////////////////////
+    // define projection function
+    function project(d) {
+        return map.project(getLL(d));
+    }
+
+    function getLL(d) {
+        return new mapboxgl.LngLat(+d.long, +d.lat)
+    }
+
+    // function for drawing circles
+    function drawCircle(data, allMin, allMax) {
+
+        // remove everything
+        svg.selectAll("circle.dot").remove();
+        // hide the slide in beginning
+        slideHide();
+
+        // start drawing map
+        // var acres = [];
+        // data.forEach(function(d) {
+        //     acres.push(+d['acres_burned']);
+        // });
+
+        // console.log(d3.extent(acres))
+        var dotScale = d3.scale.linear();
+        var colorScale = d3.scale.threshold();
+        var colors = colorbrewer.Reds[7];
+        dotScale.domain([allMin, allMax]).range([10, 10]);
+        colorScale.domain([1000, 3000, 5000, 10000, 100000]).range(colors.slice(1));
+        console.log(colors.slice(1));
+
+        var dots = svg.selectAll("circle.dot")
+            .data(data);
+
+        dots.enter().append("circle").classed("dot", true)
+            .attr("r", function(d) { return dotScale(+d['acres_burned']); })
+            .attr("fill", function(d) { return colorScale(+d['acres_burned']) });
+
+        // adding click listener
+        d3.selectAll("circle.dot")
+            .on('click', function(d) {
+                slideContent(d)
+
+                if (d3.selectAll(".circle_active")[0].length == 0) {
+                    slideShow()
+                } else {
+                    firstF().then(secondF())
+                }
+
+                d3.selectAll(".circle_active").classed('circle_active', false);
+                d3.select(this).classed('circle_active', true);
+            })
+
+        function render() {
+            dots.attr({
+                cx: function(d) {
+                    var x = project(d).x;
+                    return x
+                },
+                cy: function(d) {
+                    var y = project(d).y;
+                    return y
+                },
+            })
+        }
+
+        // re-render our visualization whenever the view changes
+        map.on("viewreset", function() {
+            render()
+        });
+        map.on("move", function() {
+            render()
+        });
+
+        // render our initial visualization
+        render();
+
+
+        $('#closeSlide').click(function() {
+            slideHide()
+            // firstF().then(secondF())
+            d3.selectAll('circle') //<-- or slap a class name on your circles and use that
+                .attr("fill", function(a) { return colorScale(+a['acres_burned']) });
+        })
+    }
+
+
+    // checking window width and change css
+    function checkWidth() {
+        if ($(window).width() < 992) {
+
+            $('#menu').css('left', '-80%')
+            $('#closeFilter').css('display', 'block')
+
+        } else {
+            $('#menu').css('left', '0')
+            $('#menu').css('width', '17%')
+            $('#closeFilter').css('display', 'none')
+
+        }
+    }
+
+
+
+    // function for slide animation:show
+    function slideShow() {
+        $('.slide').css('right', '2rem')
+        $('.slide').css('box-shadow', "-31px 8px 180px 2px rgba(14, 16, 33, 0.5)")
+        $('.slide').css('z-index', 5)
+        $('.slide').css('opacity', 0.92)
+
+
+    }
+    // function for slide animation:Hide
+    function slideHide() {
+        d3.selectAll(".circle_active").classed('circle_active', false);
+        $('.slide').css('z-index', '-1000');
+        $('.slide').css('right', '-23.063rem')
+    }
+
+    // function for managing two transition one by one
+    function firstF() {
+        var deferred = new $.Deferred();
+        slideHide()
+        return deferred.promise();
+    }
+
+    function secondF() {
+        setTimeout(function() { slideShow(); }, 400);
+    }
+
+    // function for making slide content
+    function roundToThree(num) {
+        return +(Math.round(num + "e+3") + "e-3");
+    }
+
+    function slideContent(d) {
+
+        // $('#burned').html('Acres burned : ' + d['acres_burned'])
+        // $('#wind_speed').html('Mean wind speed: ' + roundToThree(d['mean_wind_speed']))
+        // $('#air_temp').html('max_air temp: ' + roundToThree(d['max_air_temp']))
+        // $('#precip').html('Total Precipitation : ' + roundToThree(d['total_precip']))
+        // $('#date').html('Date : ' + d['year'] + '-' + d['month'] + '-' + d['day'])
+        // $('#location').html('Location: ' + d['na_l3name'])
+        $('#burned').html( d['acres_burned'])
+        $('#wind_speed').html(roundToThree(d['mean_wind_speed']))
+        $('#air_temp').html(roundToThree(d['max_air_temp']))
+        $('#precip').html(roundToThree(d['total_precip']))
+        $('#date').html(d['year'] + '-' + d['month'] + '-' + d['day'])
+        $('#location').html(d['na_l3name'])
+    }
+
+    // function for making dropdown
+    function generateDropdown(dropdownOption, col_name, select_name, label_name) {
+
+        // var dropdownOption = $.unique($.map(data, function(a) { return a[col_name]; })).sort();
+
+        d3.select('#filter')
+            .append("label")
+            .attr('for', select_name)
+            .html(label_name + ": ")
+
+        var select = d3.select("#filter")
+            .append("select")
+            .attr('name', select_name)
+            .attr('id', select_name)
+            .style("margin-right", '10px');
+        //.style("width", '155px');
+
+        select.selectAll("option")
+            .data(dropdownOption)
+            .enter()
+            .append("option")
+            .attr("value", function(d) {
+                return d;
+            })
+            .text(function(d) {
+                return d;
+            });
+
+    }
+    </script>
+</body>
+
+</html>

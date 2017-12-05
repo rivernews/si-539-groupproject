@@ -26,18 +26,6 @@ def isInTimeStrInterval(instance_time, start_time_str, end_time_str):
         return False
     pass
 
-def isGtTime():
-    pass
-
-def isStTime():
-    pass
-
-def isGtArea():
-    pass
-
-def isStArea():
-    pass
-
 def getCSVdata(param_dict={}):
     # validate paramter first: bad format / missing required params
     # validate parameter: start value should always smaller than end
@@ -140,11 +128,9 @@ def api_get(request):
         return JsonResponse(json_dict)
 
 def index(request):
-    print("request pre-processing in django")
     if request.method == 'GET':
         vars = {
             'title': 'Home Page la',
             'data': getCSVdata(),
         }
-        print('initial page loading', vars['data'])
         return render(request,'base.html',vars)
