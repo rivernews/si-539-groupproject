@@ -9,3 +9,4 @@ local_settings.py
 
 venv_windows/
 venv_mac/
+venv/
