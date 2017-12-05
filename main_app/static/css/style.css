@@ -1,0 +1,186 @@
+  a{
+    text-decoration: none;
+  }
+
+
+/*header and portal*/
+  header{
+    /*position: fixed;*/
+    width: 100%;
+  }
+
+  .otherTwo{
+    /*position: fixed;*/
+    width: 100%;
+  }
+
+  .portal{
+    background-image: url("/static/img/forestfire2.jpg");
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-position: center;
+  }
+
+  body{
+    display: block;
+    height: 100%;
+    margin: 0;
+  }
+
+  .portal h1{
+    color: black;
+    text-align: center;
+    font: 80px fantasy, sans-serif;
+    padding: 20px 0 10px 0;
+    background: rgba (255，255，255，0.8)；
+  }
+
+  .otherTwo{
+    background: rgba(0, 0, 0, 0.1);
+    padding-top: 1px;
+  }
+
+  h2{
+    width: 100%;
+    text-align: center;
+    margin-bottom: 10px;
+    font: 48px fantasy, sans-serif;
+  }
+
+  h2 a{
+    color: black;
+  }
+
+  .portal nav{
+    margin-top: 500px;
+  }
+
+  .portal nav ul{
+    padding: 0;
+  }
+
+  .otherTwo nav ul{
+    margin: 0;
+    padding-bottom: 5px;
+    background: rgba(0, 0, 0, 0.8);
+  }
+
+
+  nav li{
+    list-style-type: none;
+  }
+
+  .portal nav li{
+    width: 100%;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.3);
+    margin: 140px 0;
+    padding: 20px 0;
+  }
+
+  .otherTwo nav li{
+    display: inline-block;
+    margin: 0 10px;
+    width: 15%;
+    padding-left: 10%;
+  }
+
+  .fireviewer nav li{
+    width: 35%;
+  }
+
+  nav li a{
+    font-family: avenir;
+    font-weight: lighter;
+    color: black;
+  }
+
+  .portal nav li a{
+    color: white;
+    font-size: 48px;
+  }
+
+  .portal nav li a:hover{
+    color: rgba(0,0,0,0.5);
+  }
+
+  .otherTwo nav li a{
+    color: white;
+    font-size: 18px;
+  }
+
+  .otherTwo .samePageNav a{
+    font-size: 12px;
+  }
+
+/*section*/
+
+  section{
+    padding: 0 30px;
+  }
+  dt{
+    text-align: center;
+    font: 24px calibri, sans-serif;
+    margin-top: 20px;
+  }
+
+/*footer*/
+  footer{
+    color: rgba(200,200,200,0.5);
+    position: fixed;
+    width: 100%;
+    text-align: center;
+    bottom: 0;
+    padding-bottom: 20px;
+  }
+
+  footer small{
+    display: block;
+    padding: 2px 0;
+  }
+
+  footer .tip{
+    background: rgba(0, 0, 0, 1);
+  }
+
+  footer .tip a{
+    color: white;
+    text-decoration: none;
+  }
+
+
+
+
+
+  @media screen and (min-width: 940px) {
+    .portal{
+      background-size: 100% 110%;
+    }
+
+    .portal h1{
+      color: white;
+      text-align: center;
+      font-size: 130px;
+      padding: 50px 0 10px 0;
+    }
+
+    .portal nav li{
+      display: inline-block;
+      width: 49%;
+      text-align: center;
+      background: none;
+      margin: 0;
+    }
+    .portal nav li a{
+      font-size: 24px;
+    }
+    .portal nav{
+      margin-top: 600px;
+      padding: 0;
+    }
+
+    .portal ul{
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+  }

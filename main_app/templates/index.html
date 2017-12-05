@@ -1,0 +1,35 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+	<title>Wild Fire</title>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+
+<body class="portal">
+	<header >
+			<!-- <span class="col-lg-1"></span> -->
+			<h1 >Wild Fire</h1>
+	</header>
+
+	<nav>
+		<ul>
+			<li id="fireLi"><a id="fire" href="/fire_map">Fire Viewer</a></li>
+			<li><a href="#" >Prevent &amp; Survive</a></li>
+		</ul>
+	</nav>
+
+	<footer>
+		<small>&copy; 2017 by: Paiju Chang / Sicun Chen / Shaung Cheng / Lihan Zhu</small>
+	</footer>
+
+	<script>
+		var portalLi = document.getElementById("fireLi");
+		var portalA = document.getElementById("fire");
+
+		portalA.addEventListener("onmouseover", function(){portalLi.style.background = rgba(0,0,0,0.7)}, false);
+
+	</script>
+</body>
+</html>

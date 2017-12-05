@@ -133,4 +133,4 @@ def index(request):
             'title': 'Home Page la',
             'data': getCSVdata(),
         }
-        return render(request,'base.html',vars)
+        return render(request,'index.html',vars)
