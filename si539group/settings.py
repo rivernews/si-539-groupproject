@@ -132,10 +132,7 @@ STATIC_URL = '/static/'
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 try:
-    from .local_settings import *
-except Exception as e:
-    ################## REMOTE SETTING ####################
-    # SECURITY WARNING: don't run with debug turned on in production!
+    print('maybe on heroku? url is', os.environ['DATABASE_URL'])
     DEBUG = False
     print('We are on Heroku! Horray')
     # Parse database configuration from $DATABASE_URL
@@ -144,4 +141,5 @@ except Exception as e:
     db_from_env = dj_database_url.config(conn_max_age=500)
     #DATABASES['default'].update(db_from_env)
     DATABASES = { 'default' : dj_database_url.config(conn_max_age=500)}
-    pass
+except:
+    from .local_settings import *
