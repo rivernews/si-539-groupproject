@@ -135,8 +135,7 @@ try:
 except Exception as e:
     ################## REMOTE SETTING ####################
     # SECURITY WARNING: don't run with debug turned on in production!
-    DEBUG = True
-
+    DEBUG = False
     print('We are on Heroku! Horray')
     # Parse database configuration from $DATABASE_URL
     import dj_database_url

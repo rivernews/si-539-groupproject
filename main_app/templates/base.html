@@ -27,7 +27,7 @@
 		<header>
 			<h1>Backend Demo</h1>
 		</header>
-		<section data-ng-controller="baseController">
+		<section >
 			{% verbatim %}
 			{% endverbatim %}
 			Below showcases data we have. These data can be used for different kinds of visualization. Questions to answer:<br>
@@ -50,10 +50,13 @@
 						Event
 					</th>
 					<th>
-						Time (month-19XX)
+						Time
 					</th>
 					<th>
 						Location (latitude, longitude)
+					</th>
+					<th>
+						State (in US)
 					</th>
 					<th>
 						Size (in acres)
@@ -86,6 +89,9 @@
 						{{fire.lat}}, {{fire.long}}
 					</th>
 					<th>
+						{{fire.state}}
+					</th>
+					<th>
 						{{fire.area}}
 					</th>
 					<th>
@@ -106,7 +112,7 @@
 				</tr>
 				{% endfor %}
 			</table>
-			<button data-ng-click="fire_ajax()">
+			<button onclick="get_fire_data()">
 				Fire Ajax
 			</button>
 		</section>
@@ -115,22 +121,6 @@
 			<p>Wolverine Initiative. All Right Reserved 2017.</p>
 		</footer>
 
-		<script type="text/javascript" >
-			app.controller("baseController", function($scope, $http){
-				// send a ajax request!
-				target_url = "get_data";
-				$scope.fire_ajax = function(){
-					$http.get(target_url, {"request_msg": "haha"})
-					.then(function (response) {
-						console.log("Ajax succeed la!");
-						// $scope.fire_events = response.data["data"];
-						// console.log($scope.fire_events);
-					}, function (xhr, status, err) {
-						console.log("Ajax error la!! Err msg:");
-						console.error(target_url, status, err.toString(), xhr.responseText);
-					});
-				} 	
-			});
-		</script>
+		<script type="text/javascript" src="{% static 'js/fireDataManager.js' %}"></script>
 	</body>
 </html>
