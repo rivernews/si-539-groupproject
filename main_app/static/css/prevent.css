@@ -1,0 +1,76 @@
+@import 'https://fonts.googleapis.com/css?family=Ubuntu:300, 400, 500, 700';
+
+*, *:after, *:before {
+    margin: 0;
+    padding: 0;
+}
+
+.svg-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: -1;
+}
+
+svg path {
+    transition: .1s;
+}
+
+body {
+    background: #fff;
+    color: #333;
+    font-family: 'Ubuntu', sans-serif;
+    position: relative;
+}
+
+h3 {
+    font-weight: 400;
+}
+
+header {
+    color: #fff;
+    padding-top: 10vw;
+    padding-bottom: 30vw;
+    text-align: center;
+}
+
+main {
+    background: linear-gradient(to bottom, #ffffff 0%, #dddee1 100%);
+    border-bottom: 1px solid rgba(0, 0, 0, .2);
+    padding: 10vh 0 10vh;
+    position: relative;
+    overflow: hidden;
+}
+article {
+    max-width: 700px;
+    margin: 0 auto;
+    z-index: 100;
+}
+article h3 {
+    font-size: 2rem;
+    color: #202020;
+    margin-bottom: 0.25em;
+    margin-top: 1em;
+}
+
+article p {
+    font-weight: 400;
+    font-size: 1.150em;
+    line-height: 1.4;
+    color: #363636;
+    margin-bottom: 1.1635em;
+    letter-spacing: -0.0040em;
+}
+
+footer #footer {
+    background: #dddee1;
+    padding: 5vh 0;
+    text-align: center;
+    /*position: relative;*/
+}
+
+small {
+    opacity: .5;
+    font-weight: 300;
+}
