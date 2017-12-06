@@ -120,7 +120,7 @@ def prevent(request):
     if request.method == 'GET':
         vars = {
         }
-        return render(request,'prevent.html',vars)
+        return render(request,'prevent.rev.html',vars)
 
 def index(request):
     if request.method == 'GET':

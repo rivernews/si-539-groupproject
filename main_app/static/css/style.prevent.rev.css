@@ -1,0 +1,249 @@
+  a{
+    text-decoration: none;
+  }
+
+
+
+/*header and portal*/
+  header{
+    /*position: fixed;*/
+    width: 100%;
+  }
+
+  .otherTwo{
+    /*position: fixed;*/
+    width: 100%;
+  }
+
+  .portal{
+    background-image: url("../img/forestfire2.jpg");
+    background-repeat: no-repeat;
+    background-size: auto 200%;
+    background-position: center;
+  }
+
+  body{
+    display: block;
+    height: 100%;
+    margin: 0;
+  }
+
+  .portal h1{
+    color: black;
+    text-align: center;
+    font: 80px fantasy, sans-serif;
+    padding: 40px 0 10px 0;
+    background: rgba (255，255，255，0.8)；
+  }
+
+  .otherTwo{
+    background-image: url("../img/forestfire2.jpg");
+    background-repeat: no-repeat;
+    background-size: 150%;
+    background-position: center;
+  }
+
+  h2{
+    width: 100%;
+    text-align: center;
+    padding-top: 10px;
+    font: 36px fantasy, sans-serif;
+    margin: 0;
+  }
+
+  h2 a{
+    color: white;
+  }
+
+  .portal nav{
+    margin-top: 150px;
+  }
+
+  .portal nav ul{
+    padding: 0;
+  }
+
+  .otherTwo nav ul{
+    margin: 0;
+    padding-bottom: 5px;
+    background: rgba(0, 0, 0, 0.8);
+  }
+
+
+  nav li{
+    list-style-type: none;
+  }
+
+  .portal nav li{
+    width: 100%;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.5);
+    margin: 18% 0;
+    padding: 10px 0;
+  }
+
+  .otherTwo nav li{
+    display: inline;
+    margin: 0 10px;
+    width: 15%;
+    padding-left: 15%;
+  }
+
+  .fireviewer nav li{
+    width: 35%;
+  }
+
+  nav li a{
+    font-family: avenir;
+    font-weight: lighter;
+    color: black;
+    padding-left: 5%;
+  }
+
+  .portal nav li a{
+    color: white;
+    font-size: 24px;
+  }
+
+  nav li a:hover{
+    color: rgba(0,0,0,0.5);
+  }
+
+  .otherTwo nav li a{
+    color: white;
+    font-size: 14px;
+  }
+
+  .otherTwo .samePageNav a{
+    font-size: 12px;
+  }
+
+/*section*/
+
+  section{
+    padding: 0 30px;
+  }
+  dt{
+    text-align: center;
+    font: 24px calibri, sans-serif;
+    margin-top: 20px;
+  }
+
+/*footer*/
+  footer{
+    color: rgba(200,200,200,0.5);
+    width: 100%;
+    text-align: center;
+    bottom: 0;
+    padding-bottom: 20px;
+  }
+
+  #footer{
+    color: rgba(255,255,255,1);
+    background: rgba(0,0,0,0.5);
+  }
+
+  footer small{
+    display: block;
+    padding: 10px 0 0 0;
+  }
+
+  footer .tip{
+    background: rgba(0, 0, 0, 1);
+  }
+
+  footer .tip a{
+    color: white;
+    text-decoration: none;
+  }
+
+
+
+
+
+  @media screen and (min-width: 1025px) {
+    .portal{
+      background-size: 100% 120%;
+    }
+
+    .portal h1{
+      color: white;
+      text-align: center;
+      font-size: 130px;
+      padding: 50px 0 10px 0;
+    }
+
+    .portal nav li{
+      display: inline-block;
+      width: 49%;
+      text-align: center;
+      background: none;
+      margin: 0;
+    }
+    .portal nav li a{
+      font-size: 24px;
+    }
+    .portal nav{
+      margin-top: 420px;
+      padding: 0;
+    }
+
+    .portal ul{
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .otherTwo{
+      background-image: url("../img/forestfire2.jpg");
+      background-repeat: no-repeat;
+      background-size: auto;
+      background-position: center;
+    }
+
+    .otherTwo h2{
+      display: inline;
+      margin-left: 93px;
+    }
+
+    .otherTwo h2 a{
+      font-size: 48px;
+      color: black;
+    }
+
+    .otherTwo{
+      padding-top: 20px;
+    }
+
+    .otherTwo nav{
+      display: inline;
+      float: right;
+      padding-top: 25px;
+    }
+
+    .otherTwo nav li{
+      margin: 0 50px;
+      width: 25%;
+      padding-left: 20%;
+    }
+
+    .otherTwo nav ul{
+      background: none;
+      padding-right: 50px;
+    }
+
+    .otherTwo nav li a{
+      color: white;
+      font-size: 20px;
+      float: right;
+      padding-right: 5%;
+    }
+
+    article h3{
+      font-size: 2.3em;
+      text-align: center;
+      padding: 0;
+    }
+
+  }
+  .current {
+    color: rgba(255,0,0,0.8);
+  }
