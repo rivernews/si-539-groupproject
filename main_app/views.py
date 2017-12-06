@@ -127,6 +127,12 @@ def api_get(request):
         }
         return JsonResponse(json_dict)
 
+def prevent(request):
+    if request.method == 'GET':
+        vars = {
+        }
+        return render(request,'prevent.html',vars)
+
 def index(request):
     if request.method == 'GET':
         vars = {
