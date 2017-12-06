@@ -15,17 +15,6 @@ def get_param_to_dict(get_query_dict):
         param_dict[key] = value
     return param_dict
 
-def isInTimeStrInterval(instance_time, start_time_str, end_time_str):
-    # expected data format. YY-mm, rahter than YY-mm-dd.
-    try:
-        start_time = datetime.datetime.strptime(start_time_str, '%Y-%m')
-        end_time = datetime.datetime.strptime(end_time_str, '%Y-%m')
-        return start_time <= instance_time <= end_time
-    except ValueError as e:
-        print(e)
-        return False
-    pass
-
 def getCSVdata(param_dict={}):
     # validate paramter first: bad format / missing required params
     # validate parameter: start value should always smaller than end
@@ -139,4 +128,4 @@ def index(request):
             'title': 'Home Page la',
             'data': getCSVdata(),
         }
-        return render(request,'index.html',vars)
+        return render(request,'main_app/index.html',vars)

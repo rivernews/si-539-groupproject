@@ -4,4 +4,4 @@ from django.shortcuts import render
 def index(request):
     if request.method == 'GET':
         vars = {}
-        return render(request,'index.html',vars)
+        return render(request,'fire_map_app/index.html',vars)
