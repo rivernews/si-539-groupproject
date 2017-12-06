@@ -1,220 +1,229 @@
 {% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <head>
-    <title>539 Project</title>
+    <title>fireviewer</title>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.39.1/mapbox-gl.css' rel='stylesheet' />
     <!--  <link rel="stylesheet" href="css/normalize.css" /> -->
-    <link rel="stylesheet" href="{% static 'css/ion.rangeSlider.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/ion.rangeSlider.skinFlat.css' %}" />
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="css/ion.rangeSlider.css" />
+    <link rel="stylesheet" href="css/ion.rangeSlider.skinFlat.css" />
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <style type="text/css">
 
-    html { visibility:hidden; }
+      html { visibility:hidden; }
 
-    body {
-        margin: 0;
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-    }
+      body {
+          margin: 0;
+          position: fixed;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+      }
 
-    #menu {
-        position: absolute;
-        background: #fff;
-        padding: 20px;
-        font-family: 'Open Sans', sans-serif;
-        display: table;
-        border-spacing: 15px 0px;
-        height: 100%;
-        width: 17%;
-        transition: all 0.4s cubic-bezier(0.85, -0.01, 0.21, 1);
-        z-index: 10;
-    }
+      #menu {
+          position: absolute;
+          background: #fff;
+          padding: 20px;
+          font-family: 'Open Sans', sans-serif;
+          display: table;
+          border-spacing: 15px 0px;
+          height: 100%;
+          width: 17%;
+          transition: all 0.4s cubic-bezier(0.85, -0.01, 0.21, 1);
+          z-index: 10;
+      }
 
-    #menu>div {
-        margin-bottom: 20px;
-    }
-
-
-    #map {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-    }
-
-    svg {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-    }
+      #menu>div {
+          margin-bottom: 20px;
+      }
 
 
-    circle.dot {
-        fill-opacity: 0.5;
-        stroke: lightgrey;
-        stroke-width: 1;
-    }
+      #map {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+      }
 
-    circle.dot:hover {
-        cursor: default;
-    }
-
-    .circle_active {
-        fill: yellow;
-        fill-opacity: 0.4;
-    }
-    /* for the slide pages */
-
-    .slide {
-        position: fixed;
-        width: 30%;
-        height: 75vh;
-        top: 10vh;
-        padding: 30px;
-        text-align: center;
-        background-color: rgb(27, 31, 58);
-        opacity: 0;
-        border-radius: 5px;
-        right: -50%;
-        z-index: 2;
-        transition: all 0.8s cubic-bezier(0.71, -0.1, 0.09, 1.07);
-    }
-    /* for the close buttons */
-
-    .close_container {
-        position: absolute;
-        top: .9rem;
-        font-size: 30px;
-    }
-
-    #closeSlide {
-
-        font-size: .5rem;
-        background-color: rgb(27, 31, 58);
-        left: -10;
-        height: 2rem;
-        width: 2rem;
-        border: 0px solid black;
-        z-index: 100;
-        transition: all 0.4s cubic-bezier(0.85, -0.01, 0.21, 1);
-        color: white;
-        font-size: 20px;
-    }
-
-    #closeFilter {
-
-        font-size: .5rem;
-        background-color: white;
-        right: -10;
-        height: 2rem;
-        width: 2rem;
-        border: 0px solid black;
-        z-index: 100;
-        transition: all 0.4s cubic-bezier(0.85, -0.01, 0.21, 1);
-        color: black;
-        font-size: 20px;
-        border-radius: 50%;
-    }
+      svg {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+      }
 
 
-    #closeFilter:hover,
-    #closeSlide:hover {
-        cursor: pointer;
-        opacity: 0.4;
-    }
-    /* for container content */
+      circle.dot {
+          fill-opacity: 0.5;
+          stroke: lightgrey;
+          stroke-width: 1;
+      }
 
-    .detail_container {
-        width: 100%;
-        /*height: 60px;*/
-        top: 30;
-        bottom: 0;
+      circle.dot:hover {
+          cursor: default;
+      }
 
-    }
+      .circle_active {
+          fill: yellow;
+          fill-opacity: 0.4;
+      }
+      /* for the slide pages */
 
-    .detail_item {
-        border: 2px solid #ffffff;
-        height: 8vh;
-        color: white;
-        display: table;
-        width: 100%;
-        border-spacing: 5px 5px;
-        /*border-spacing: 15px 20px;*/
+      .slide {
+          position: fixed;
+          width: 30%;
+          height: 75vh;
+          top: 10vh;
+          padding: 30px;
+          text-align: center;
+          background-color: rgb(27, 31, 58);
+          opacity: 0;
+          border-radius: 5px;
+          right: -50%;
+          z-index: 2;
+          transition: all 0.8s cubic-bezier(0.71, -0.1, 0.09, 1.07);
+      }
+      /* for the close buttons */
 
-    }
+      .close_container {
+          position: absolute;
+          top: .9rem;
+          font-size: 30px;
+      }
 
-    .detail_item>div {
-        display: table-cell;
-        vertical-align: middle;
-        width: 50%;
-    }
+      #closeSlide {
 
+          font-size: .5rem;
+          background-color: rgb(27, 31, 58);
+          left: -10;
+          height: 2rem;
+          width: 2rem;
+          border: 0px solid black;
+          z-index: 100;
+          transition: all 0.4s cubic-bezier(0.85, -0.01, 0.21, 1);
+          color: white;
+          font-size: 20px;
+      }
 
-    .detail_item img {
-        height: 5vh;
-        width: 100%;
-        object-fit: contain;
-        /*       display:none;*/
-    }
+      #closeFilter {
 
-    .detail_item_text {
-        text-align: center;
-    }
-
-
-    @media screen and (max-width: 900px) {
-
-        .slide { width: 50%}
-    }
-
-    @media screen and (max-width: 700px) {
-
-        .slide { width: 70%}
-    }
-    /* for range slider */
-
-    .irs-grid-pol,
-    .irs-grid-text {
-        color: #333333;
-        font-size: 20px;
-    }
+          font-size: .5rem;
+          background-color: white;
+          right: -10;
+          height: 2rem;
+          width: 2rem;
+          border: 0px solid black;
+          z-index: 100;
+          transition: all 0.4s cubic-bezier(0.85, -0.01, 0.21, 1);
+          color: black;
+          font-size: 20px;
+          border-radius: 50%;
+      }
 
 
+      #closeFilter:hover,
+      #closeSlide:hover {
+          cursor: pointer;
+          opacity: 0.4;
+      }
+      /* for container content */
 
-    .irs-grid-pol {
-        background: #333333;
-    }
+      .detail_container {
+          width: 100%;
+          /*height: 60px;*/
+          top: 30;
+          bottom: 0;
 
-    #acre_slider .irs-to,
-    #acre_slider .irs-from,
-    #acre_slider .irs-single {
-        font-size: 10px;
-        top: 0px;
-    }
+      }
 
-    #place {
-        width: 200px;
-    }
-    /*for filter button */
+      .detail_item {
+          border: 2px solid #ffffff;
+          height: 8vh;
+          color: white;
+          display: table;
+          width: 100%;
+          border-spacing: 5px 5px;
+          /*border-spacing: 15px 20px;*/
 
-    #filter_button_container {
-        position: absolute;
-        background: none;
-        padding: 10px;
-        font-family: 'Open Sans', sans-serif;
-        display: table;
-        /*table-layout: fixed;*/
-        border-spacing: 15px 0px;
-    }
+      }
+
+      .detail_item>div {
+          display: table-cell;
+          vertical-align: middle;
+          width: 50%;
+      }
+
+
+      .detail_item img {
+          height: 5vh;
+          width: 100%;
+          object-fit: contain;
+          /*       display:none;*/
+      }
+
+      .detail_item_text {
+          text-align: center;
+      }
+
+
+      @media screen and (max-width: 900px) {
+
+          .slide { width: 50%}
+      }
+
+      @media screen and (max-width: 700px) {
+
+          .slide { width: 70%}
+      }
+      /* for range slider */
+
+      .irs-grid-pol,
+      .irs-grid-text {
+          color: #333333;
+          font-size: 20px;
+      }
+
+
+
+      .irs-grid-pol {
+          background: #333333;
+      }
+
+      #acre_slider .irs-to,
+      #acre_slider .irs-from,
+      #acre_slider .irs-single {
+          font-size: 10px;
+          top: 0px;
+      }
+
+      #place {
+          width: 200px;
+      }
+      /*for filter button */
+
+      #filter_button_container {
+          position: absolute;
+          background: none;
+          padding: 10px;
+          font-family: 'Open Sans', sans-serif;
+          display: table;
+          /*table-layout: fixed;*/
+          border-spacing: 15px 0px;
+      }
     </style>
+  	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 </head>
 
-<body>
-    
+<body class="fireviewer">
+    <header class="otherTwo">
+        <h2 ><a href="/">Wild Fire</a></h2>
+        <nav>
+          <ul>
+            <li><a href="/prevent" >Survive</a></li>
+  					<li><a href="/fire_map" class="current">Fire Viewer</a></li>
+          </ul>
+        </nav>
+    </header>
     <div id="map">
     </div>
     <div id='filter_button_container'>
@@ -264,7 +273,7 @@
             </div>
             <div class="detail_item">
                 <div id='burned_img'>
-                    <img src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0ZWQgYnkgSWNvTW9vbi5pbyAtLT4KPCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHdpZHRoPSIyNTZweCIgaGVpZ2h0PSIyNTZweCIgdmlld0JveD0iMCAwIDE2IDE2Ij4KPHBhdGggZmlsbD0iI0ZGRkZGRiIgZD0iTTQuOSAxNS44YzAgMC0zLjktMC40LTMuOS01LjcgMC00LjEgMy4xLTYuNSAzLjEtNi41czEuMyAxLjQgMi4zIDEuOWMxIDAuNiAxLjQtNS41IDEuNC01LjVzNy4yIDMuOSA3LjIgOS44YzAgNi4xLTQgNS45LTQgNS45czEuOC0yLjQgMS44LTUuMmMwLTMtMy45LTYuNy0zLjktNi43cy0wLjUgNC40LTIuMSA1Yy0xLjYtMC45LTIuNS0yLjMtMi41LTIuM3MtMy43IDUuOCAwLjYgOS4zeiIvPgo8cGF0aCBmaWxsPSIjRkZGRkZGIiBkPSJNOC4yIDE2LjFjLTItMC4xLTMuNy0xLjQtMy43LTMuMnMwLjctMi42IDAuNy0yLjYgMC41IDEgMS4xIDEuNSAxLjggMC44IDIuNCAwLjFjMC42LTAuNiAwLjgtMi4zIDAuOC0yLjNzMS40IDEuMSAxLjIgM2MtMC4xIDItMC45IDMuNS0yLjUgMy41eiIvPgo8L3N2Zz4K" /> 
+                    <img src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0ZWQgYnkgSWNvTW9vbi5pbyAtLT4KPCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHdpZHRoPSIyNTZweCIgaGVpZ2h0PSIyNTZweCIgdmlld0JveD0iMCAwIDE2IDE2Ij4KPHBhdGggZmlsbD0iI0ZGRkZGRiIgZD0iTTQuOSAxNS44YzAgMC0zLjktMC40LTMuOS01LjcgMC00LjEgMy4xLTYuNSAzLjEtNi41czEuMyAxLjQgMi4zIDEuOWMxIDAuNiAxLjQtNS41IDEuNC01LjVzNy4yIDMuOSA3LjIgOS44YzAgNi4xLTQgNS45LTQgNS45czEuOC0yLjQgMS44LTUuMmMwLTMtMy45LTYuNy0zLjktNi43cy0wLjUgNC40LTIuMSA1Yy0xLjYtMC45LTIuNS0yLjMtMi41LTIuM3MtMy43IDUuOCAwLjYgOS4zeiIvPgo8cGF0aCBmaWxsPSIjRkZGRkZGIiBkPSJNOC4yIDE2LjFjLTItMC4xLTMuNy0xLjQtMy43LTMuMnMwLjctMi42IDAuNy0yLjYgMC41IDEgMS4xIDEuNSAxLjggMC44IDIuNCAwLjFjMC42LTAuNiAwLjgtMi4zIDAuOC0yLjNzMS40IDEuMSAxLjIgM2MtMC4xIDItMC45IDMuNS0yLjUgMy41eiIvPgo8L3N2Zz4K" />
                     Burn
                 </div>
                 <div id='burned' class='detail_item_text'></div>
@@ -296,10 +305,13 @@
     <!--<div class="legend">-->
     <!--<h4>Trips</h4>-->
     <!--</div>-->
+    <footer>
+      <small>&copy; 2017 by: Paiju Chang / Sicun Chen / Shaung Cheng / Lihan Zhu</small>
+    </footer>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script src="https://d3js.org/d3.v3.min.js"></script>
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.39.1/mapbox-gl.js'></script>
-    <script src="https://d3js.org/colorbrewer.v1.min.js"></script>
+    <script src="http://d3js.org/colorbrewer.v1.min.js"></script>
     <!-- <script src="https://momentjs.com/downloads/moment.js"></script> -->
     <script src="{% static 'js/ion.rangeSlider.js' %}"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -407,9 +419,9 @@
 
     // $("#submit_button").click(function() {
 
-    //      var url = 'url/map.html?place=' + $( "#place" ).val() 
+    //      var url = 'url/map.html?place=' + $( "#place" ).val()
     //      + '&ABmin=' + $('#range_AB').data().from + '&ABmax=' + $('#range_AB').data().to
-    //      + '&Dayfrom=' + moment($('#range').data().from,"X").format("YYYY-MM-DD") 
+    //      + '&Dayfrom=' + moment($('#range').data().from,"X").format("YYYY-MM-DD")
     //      + '&Dayto=' + moment($('#range').data().to,"X").format("YYYY-MM-DD")
 
     //      alert(url)
@@ -437,7 +449,7 @@
         $("#submit_button").click(function() {
 
 
-            // filter by state and arc 
+            // filter by state and arc
             var data2 = data.filter(function(d) {
 
                 if ($("#states").val() != 'ALL') {
@@ -495,7 +507,7 @@
         // remove everything
         svg.selectAll("circle.dot").remove();
         // hide the slide in beginning
-        slideHide();
+        slideHide()
 
         // start drawing map
         // var acres = [];
