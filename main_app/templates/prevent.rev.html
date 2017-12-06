@@ -1,0 +1,234 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+	<title>prevent and survive</title>
+	<link href="{% static 'css/prevent.css' %}" rel="stylesheet">
+	<style>
+		/*@import 'https://fonts.googleapis.com/css?family=Ubuntu:300, 400, 500, 700';*/
+
+		*, *:after, *:before {
+			margin: 0;
+			padding: 0;
+		}
+
+		h1{
+			font-size: 4em;
+		}
+
+		.svg-container {
+			position: absolute;
+			top: 0;
+			right: 0;
+			left: 0;
+			z-index: -1;
+		}
+
+		svg path {
+			transition: .1s;
+		}
+
+		body {
+			background: #fff;
+			color: #333;
+			font-family: 'Ubuntu', sans-serif;
+			position: relative;
+		}
+
+		h3 {
+			font-weight: 400;
+		}
+
+		/*header {
+			color: #fff;
+			padding-top: 10vw;
+			padding-bottom: 10vw;
+			text-align: center;
+		}*/
+
+		main {
+			background: linear-gradient(to bottom, #ffffff 0%, #dddee1 100%);
+			border-bottom: 1px solid rgba(0, 0, 0, .2);
+			padding: 5vh 0 10vh;
+			position: relative;
+			overflow: hidden;
+		}
+		article {
+			max-width: 700px;
+			margin: 0 auto;
+			z-index: 100;
+			padding: 0 5vh;
+		}
+		article h3 {
+			font-size: 1.25rem;
+			color: #202020;
+			margin-bottom: 0.25em;
+			margin-top: 1em;
+		}
+
+		article p {
+			font-weight: 200;
+			font-size: 1em;
+			line-height: 1.4;
+			color: #363636;
+			margin-bottom: 1.1635em;
+			letter-spacing: -0.0040em;
+			padding-left: 5vh;
+		}
+
+		footer #footer {
+			background: #dddee1;
+			padding: 10vh 0;
+			text-align: center;
+			/*position: relative;*/
+		}
+
+		small {
+			opacity: .5;
+			font-weight: 300;
+		}
+
+
+		.hide{
+			display: none;
+		}
+
+		.hoverclass{
+			transition: all 1s ease-in-out;
+			/*opacity: 0;*/
+		}
+	</style>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/style.prevent.rev.css' %}">
+	<script>
+		var e;
+		var pIdName
+		function hoverOver(e){
+			pIdName = "p" + e.id;
+			console.log(pIdName);
+			deCl = e.style.color;
+			e.style.background = "rgba(0,0,0,0.5)";
+			e.style.color = "rgba(255,255,255,1)";
+			document.getElementById(pIdName).classList.toggle('hide');
+			// document.getElementById(pIdName).style.opacity = 1;
+		}
+
+		function hoverNot(e){
+			// document.getElementById(pIdName).style.opacity = 0;
+			e.style.color = "rgb(0,0,0)";
+			e.style.background = "none";
+			document.getElementById(pIdName).classList.toggle('hide');
+		}
+
+	</script>
+</head>
+
+<body>
+
+<!-- <div class="svg-container">
+	<svg viewbox="0 0 800 400" class="svg">
+		<path id="curve" fill="#50c6d8" d="M 800 300 Q 400 350 0 300 L 0 0 L 800 0 L 800 300 Z">
+		</path>
+	</svg>
+</div> -->
+
+<!-- <header>
+	<h1>How to Survive<br> Wild Fire</h1>
+</header> -->
+
+<header class="otherTwo">
+		<h2 ><a href="/">Wild Fire</a></h2>
+		<nav>
+			<ul>
+				<li><a href="/prevent" class="current">Survive</a></li>
+				<li><a href="/fire_map" >Fire Viewer</a></li>
+			</ul>
+		</nav>
+</header>
+
+<main>
+	<article>
+		<h3 id="1" class="hoverclass" onmouseover="hoverOver(this)" onmouseout="hoverNot(this)">Leave the area</h3>
+		<p id="p1" class="hoverclass hide">Don't wait around to see how things develop. Wildfires are so powerful, unpredictable, and destructive, that even well-equipped and trained professional fire fighters die when they become trapped by an onrushing blaze that overruns their position.
+		</p>
+
+		<h3 id="2" class="hoverclass" onmouseover="hoverOver(this)" onmouseout="hoverNot(this)">Maintain situational awareness</h3>
+		<p id="p2" class="hoverclass hide">Be aware of what's going on around you at all times. Simple but crucial.</p>
+
+
+		<h3 id="3" class="hoverclass" onmouseover="hoverOver(this)" onmouseout="hoverNot(this)">Choose downhill routes</h3>
+		<p id="p3" class="hoverclass hide">Fire moves faster uphill due to updrafts.</p>
+
+		<h3 id="4" class="hoverclass" onmouseover="hoverOver(this)" onmouseout="hoverNot(this)">Plan ahead</h3>
+		<p id="p4" class="hoverclass hide">	Identify escape routes/safe zones where you could take shelter if a fire came roaring through the area. Safe zones include rivers, lakes (get in the water), or large level spots out in the open away from combustible material. Heat rises, so the safest zones are those that are downhill of the fire.</p>
+
+		<h3 id="5" class="hoverclass" onmouseover="hoverOver(this)" onmouseout="hoverNot(this)">Save yourselves!</h3>
+		<p id="p5" class="hoverclass hide">If you are trapped above a fire, get out as fast as you can. Don't try to save any of your gear. Gear is replaceable, lives are not.
+		</p>
+
+		<h3 id="6" class="hoverclass" onmouseover="hoverOver(this)" onmouseout="hoverNot(this)">Stay out of canyons</h3>
+		<p id="p6" class="hoverclass hide">Look for an escape route that leads downhill, but do not follow canyons, chutes or draws, as these act as chimneys that funnel deadly heat up the hill toward you.
+		</p>
+
+		<h3 id="7" class="hoverclass" onmouseover="hoverOver(this)" onmouseout="hoverNot(this)">Get low</h3>
+		<p id="p7" class="hoverclass hide">If the flames are upon you, seek low ground - in a ditch or the notch in a forest road that will allow the superheated convective current to pass overhead. The lower you are the better your chances might be.
+
+		<h3 id="9" class="hoverclass" onmouseover="hoverOver(this)" onmouseout="hoverNot(this)">Makeshift respirator</h3>
+		<p id="p9" class="hoverclass hide">Breathe inside your clothing next to your body to protect your respiratory tract so you don't inhale hot gasses.
+		</p>
+
+		<h3 id="10" class="hoverclass" onmouseover="hoverOver(this)" onmouseout="hoverNot(this)">Find burned-out area</h3>
+		<p id="p10" class="hoverclass hide">If you can find an area that has already burned over, leaving no residual fuel to reignite, that might be a safe place. But the ambient temperature of the scorched earth, rocks and timber will feel like an oven. Watch overhead to avoid snags and standing dead trees that might fall on you.
+		</p>
+
+		<h3 id="11" class="hoverclass" onmouseover="hoverOver(this)" onmouseout="hoverNot(this)">Emergency fire shelter</h3>
+		<p id="p11" class="hoverclass hide">If you can find an area that has already burned over, leaving no residual fuel to reignite, that might be a safe place. But the ambient temperature of the scorched earth, rocks and timber will feel like an oven. Watch overhead to avoid snags and standing dead trees that might fall on you.
+		</p>
+
+	</article>
+</main>
+
+<footer id="footer">
+	<small>&copy; 2017 by: Paiju Chang / Sicun Chen / Shaung Cheng / Lihan Zhu</small>
+</footer>
+<script type="text/javascript">
+    (function() {
+        // Variables
+        var $curve = document.getElementById("curve");
+        var last_known_scroll_position = 0;
+        var defaultCurveValue = 350;
+        var curveRate = 3;
+        var ticking = false;
+        var curveValue;
+
+        // Handle the functionality
+        function scrollEvent(scrollPos) {
+            if (scrollPos >= 0 && scrollPos < defaultCurveValue) {
+                curveValue = defaultCurveValue - parseFloat(scrollPos / curveRate);
+                $curve.setAttribute(
+                    "d",
+                    "M 800 300 Q 400 " + curveValue + " 0 300 L 0 0 L 800 0 L 800 300 Z"
+                );
+            }
+        }
+
+        // Scroll Listener
+        // https://developer.mozilla.org/en-US/docs/Web/Events/scroll
+        window.addEventListener("scroll", function(e) {
+            last_known_scroll_position = window.scrollY;
+
+            if (!ticking) {
+                window.requestAnimationFrame(function() {
+                    scrollEvent(last_known_scroll_position);
+                    ticking = false;
+                });
+            }
+
+            ticking = true;
+        });
+    })();
+
+</script>
+</body>
+
+</html>
