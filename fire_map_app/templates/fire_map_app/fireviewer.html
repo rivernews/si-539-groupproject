@@ -1,5 +1,8 @@
 {% load staticfiles %}
 <!DOCTYPE html>
+<!--Contributioin: Pai-Ju Chang, Sicun Chen  -->
+<!--Sicun Chen:d3, mapbox, css-->
+<!-- Pai-ju:d3, css animation, filter -->
 <html lang="en">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <head>
@@ -10,6 +13,110 @@
     <link rel="stylesheet" href="{% static 'css/ion.rangeSlider.skinFlat.css' %}" />
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <style type="text/css">
+
+        html,
+    body {
+        height: 100%;
+    }
+
+    html {
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        font-size: 16px;
+    }
+
+    *,
+    *:before,
+    *:after {
+        -moz-box-sizing: inherit;
+        box-sizing: inherit;
+    }
+
+    body {
+        margin: 0;
+        line-height: 1.5;
+        /*font-family: Roboto, Helvetica, Arial, sans-serif;
+*/        color: #333;
+    }
+    /* main ie fix */
+
+    main {
+        display: block;
+    }
+    /* headers */
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: "Roboto Slab", Times, "Times New Roman", serif;
+    }
+
+    h1 {
+        font-size: 2.2em;
+    }
+
+    h2 {
+        font-size: 2em;
+    }
+
+    h3 {
+        font-size: 1.8em;
+    }
+
+    h4 {
+        font-size: 1.6em;
+    }
+
+    h5 {
+        font-size: 1.4em;
+    }
+
+    h6 {
+        font-size: 1.2em;
+    }
+    /* anchor links */
+
+    a {
+        color: #009688;
+    }
+
+    a:hover,
+    a:active {
+        text-decoration: none;
+    }
+    /* inline block */
+
+    .ib {
+        display: -moz-inline-stack;
+        display: inline-block;
+        zoom: 1;
+        /*display: inline;*/
+        vertical-align: top;
+        width:20%;
+
+    }
+    /* ul-reset */
+
+    .ul-reset {
+        padding-left: 0;
+        margin-top: 0;
+        margin-bottom: 0;
+        list-style: none;
+    }
+    /* wrapper */
+
+    .wrapper {
+        width: 80%;
+        margin-right: auto;
+        margin-left: auto;
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+    
+
 
       html { visibility:hidden; }
 
@@ -210,20 +317,150 @@
           /*table-layout: fixed;*/
           border-spacing: 15px 0px;
       }
+
+
+          /* inline block */
+
+    .ib {
+        display: -moz-inline-stack;
+        display: inline-block;
+        zoom: 1;
+        /*display: inline;*/
+        vertical-align: top;
+        width:20%;
+
+    }
+    /* ul-reset */
+
+    .ul-reset {
+        padding-left: 0;
+        margin-top: 0;
+        margin-bottom: 0;
+        list-style: none;
+    }
+    /* wrapper */
+
+    .wrapper {
+        width: 80%;
+        margin-right: auto;
+        margin-left: auto;
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+    /* header */
+
+    .header {
+        position: relative;
+        top: 0;
+        text-align: center;
+        background-image: url("https://i.imgur.com/5CLwIkJ.jpg");
+        background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-position: right bottom; 
+    }
+    /* navigation */
+
+    .navigation {
+        background-color: #484D5F;
+        font-weight: 700;
+        opacity:0.7;
+    }
+
+    .navigation-list {
+        font-size: 0;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .navigation-item {
+        font-size: 1.2rem;
+    }
+
+    .navigation-link {
+        display: block;
+        position: relative;
+        padding: 5px 20px;
+        text-decoration: none;
+        color: white;
+        -webkit-transition: color .2s ease-in-out;
+        transition: color .2s ease-in-out;
+    }
+
+    .navigation-link:before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        width: 0;
+        border-bottom: solid 2px;
+    }
+
+    .navigation-link:before {
+        left: 0;
+    }
+
+    .navigation-link:hover {
+        color: #009688;
+    }
+
+    .navigation-link:hover:before {
+        width: 100%;
+    }
+
+    .navigation-link:before {
+        -webkit-transition: width .2s ease-in-out;
+        transition: width .2s ease-in-out;
+    }
+
+        @media only screen and (max-width:782px) {
+    .ib {
+
+            display: inline;
+            vertical-align: top;
+            width:20%;
+
+        }
+    }
+
     </style>
   	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 </head>
 
-<body class="fireviewer">
-    <header class="otherTwo">
-        <h2 ><a href="/">Wild Fire</a></h2>
-        <nav>
-          <ul>
-            <li><a href="/prevent" >Survive</a></li>
-  					<li><a href="/fire_map" class="current">Fire Viewer</a></li>
-          </ul>
+<body>
+    <header class="header">
+        <div class="wrapper" style='height:150px'>
+          <br>
+          <br>
+            <h1 class="site-title" style='margin-top:0px'>
+      Prevent and Survive
+    </h1>
+        </div>
+        <nav class="navigation">
+            <div class="wrapper">
+                <ul class="navigation-list ul-reset">
+                    <li class="navigation-item ib">
+                        <a href="/" class="navigation-link">
+            Home
+          </a>
+          </li>
+                    <li class="navigation-item ib">
+                        <a href="/fire_map" class="navigation-link">
+            Fire Viewer
+          </a>
+                    </li>
+                    <li class="navigation-item ib">
+                        <a href="/prevent" class="navigation-link">
+            Prevent and Survive
+          </a>
+          </li>
+
+                </ul>
+            </div>
         </nav>
     </header>
+
+
+
+
     <div id="map">
     </div>
     <div id='filter_button_container'>
