@@ -1,235 +1,385 @@
-{% load staticfiles %}
-
 <!DOCTYPE html>
 <html lang="en">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <head>
-	<title>prevent and survive</title>
-	<link href="{% static 'css/prevent.css' %}" rel="stylesheet">
-	<style>
-		/*@import 'https://fonts.googleapis.com/css?family=Ubuntu:300, 400, 500, 700';*/
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+    /* defaults */
 
-		*, *:after, *:before {
-			margin: 0;
-			padding: 0;
-		}
+    html,
+    body {
+        height: 100%;
+    }
 
-		h1{
-			font-size: 4em;
-		}
+    html {
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        font-size: 16px;
+    }
 
-		.svg-container {
-			position: absolute;
-			top: 0;
-			right: 0;
-			left: 0;
-			z-index: -1;
-		}
+    *,
+    *:before,
+    *:after {
+        -moz-box-sizing: inherit;
+        box-sizing: inherit;
+    }
 
-		svg path {
-			transition: .1s;
-		}
+    body {
+        margin: 0;
+        line-height: 1.5;
+        /*font-family: Roboto, Helvetica, Arial, sans-serif;
+*/        color: #333;
+    }
+    /* main ie fix */
 
-		body {
-			background: #fff;
-			color: #333;
-			font-family: 'Ubuntu', sans-serif;
-			position: relative;
-		}
+    main {
+        display: block;
+    }
+    /* headers */
 
-		h3 {
-			font-weight: 400;
-		}
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: "Roboto Slab", Times, "Times New Roman", serif;
+    }
 
-		/*header {
-			color: #fff;
-			padding-top: 10vw;
-			padding-bottom: 10vw;
-			text-align: center;
-		}*/
+    h1 {
+        font-size: 2.2em;
+    }
 
-		main {
-			background: linear-gradient(to bottom, #ffffff 0%, #dddee1 100%);
-			border-bottom: 1px solid rgba(0, 0, 0, .2);
-			padding: 5vh 0 10vh;
-			position: relative;
-			overflow: hidden;
-		}
-		article {
-			max-width: 700px;
-			margin: 0 auto;
-			z-index: 100;
-			padding: 0 5vh;
-		}
-		article h3 {
-			font-size: 1.25rem;
-			color: #202020;
-			margin-bottom: 0.25em;
-			margin-top: 1em;
-		}
+    h2 {
+        font-size: 2em;
+    }
 
-		article p {
-			font-weight: 200;
-			font-size: 1em;
-			line-height: 1.4;
-			color: #363636;
-			margin-bottom: 1.1635em;
-			letter-spacing: -0.0040em;
-			padding-left: 5vh;
-		}
+    h3 {
+        font-size: 1.8em;
+    }
 
-		footer #footer {
-			background: #dddee1;
-			padding: 10vh 0;
-			text-align: center;
-			/*position: relative;*/
-		}
+    h4 {
+        font-size: 1.6em;
+    }
 
-		small {
-			opacity: .5;
-			font-weight: 300;
-		}
+    h5 {
+        font-size: 1.4em;
+    }
+
+    h6 {
+        font-size: 1.2em;
+    }
+    /* anchor links */
+
+    a {
+        color: #009688;
+    }
+
+    a:hover,
+    a:active {
+        text-decoration: none;
+    }
+    /* inline block */
+
+    .ib {
+        display: -moz-inline-stack;
+        display: inline-block;
+        zoom: 1;
+        /*display: inline;*/
+        vertical-align: top;
+        width:20%;
+
+    }
+    /* ul-reset */
+
+    .ul-reset {
+        padding-left: 0;
+        margin-top: 0;
+        margin-bottom: 0;
+        list-style: none;
+    }
+    /* wrapper */
+
+    .wrapper {
+        width: 80%;
+        margin-right: auto;
+        margin-left: auto;
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+    /* header */
+
+    .header {
+        position: relative;
+        top: 0;
+        text-align: center;
+        background-image: url("https://i.imgur.com/5CLwIkJ.jpg");
+        background-repeat: no-repeat;
+	    background-attachment: fixed;
+	    background-position: right bottom; 
+    }
+    /* navigation */
+
+    .navigation {
+        background-color: #484D5F;
+        font-weight: 700;
+        opacity:0.7;
+    }
+
+    .navigation-list {
+        font-size: 0;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .navigation-item {
+        font-size: 1.2rem;
+    }
+
+    .navigation-link {
+        display: block;
+        position: relative;
+        padding: 5px 20px;
+        text-decoration: none;
+        color: white;
+        -webkit-transition: color .2s ease-in-out;
+        transition: color .2s ease-in-out;
+    }
+
+    .navigation-link:before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        width: 0;
+        border-bottom: solid 2px;
+    }
+
+    .navigation-link:before {
+        left: 0;
+    }
+
+    .navigation-link:hover {
+        color: #009688;
+    }
+
+    .navigation-link:hover:before {
+        width: 100%;
+    }
+
+    .navigation-link:before {
+        -webkit-transition: width .2s ease-in-out;
+        transition: width .2s ease-in-out;
+    }
+    /* main */
+
+    .main {
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+
+    .content-article {
+        margin-top: 80px;
+    }
+
+    .content-article:first-child {
+        margin-top: 0;
+    }
+
+    .content-article>h1:first-child {
+        margin-top: 0;
+    }
+    /* footer */
+
+    .footer {
+        padding-top: 20px;
+        padding-bottom: 20px;
+        background-color: #333;
+        color: #fff;
+    }
+
+    .footer a,
+    .footer a:hover {
+        color: inherit;
+        font-size: 1rem;
+    }
+
+    .footer .navigation {
+        background-color: inherit;
+        text-align: center;
+        font-weight: 400;
+    }
+    /* media queries */
+
+    .itemprevent {
+    	margin-top:30px;
+    }
+    .majorpointslegend {
+    	font-size:25px;
+    }
+
+    @media only screen and (max-width:1024px) {
+        .wrapper {
+            width: 90%;
+        }
+    }
 
 
-		.hide{
-			display: none;
-		}
+    @media only screen and (max-width:782px) {
+		.ib {
 
-		.hoverclass{
-			transition: all 1s ease-in-out;
-			/*opacity: 0;*/
-		}
-	</style>
-	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-	<script>
-		var e;
-		var pIdName
-		function hoverOver(e){
-			pIdName = "p" + e.id;
-			console.log(pIdName);
-			deCl = e.style.color;
-			e.style.background = "rgba(0,0,0,0.5)";
-			e.style.color = "rgba(255,255,255,1)";
-			document.getElementById(pIdName).classList.toggle('hide');
-			// document.getElementById(pIdName).style.opacity = 1;
-		}
+		        display: inline;
+		        vertical-align: top;
+		        width:20%;
 
-		function hoverNot(e){
-			// document.getElementById(pIdName).style.opacity = 0;
-			e.style.color = "rgb(0,0,0)";
-			e.style.background = "none";
-			document.getElementById(pIdName).classList.toggle('hide');
-		}
-
-	</script>
+		    }
+    }
+        
+    </style>
 </head>
 
 <body>
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
 
-<!-- <div class="svg-container">
-	<svg viewbox="0 0 800 400" class="svg">
-		<path id="curve" fill="#50c6d8" d="M 800 300 Q 400 350 0 300 L 0 0 L 800 0 L 800 300 Z">
-		</path>
-	</svg>
-</div> -->
+    <header class="header">
+        <div class="wrapper" style='height:200px'>
+        	<br>
+        	<br>
+            <h1 class="site-title" style='margin-top:0px'>
+			Prevent and Survive
+		</h1>
+        </div>
+        <nav class="navigation">
+            <div class="wrapper">
+                <ul class="navigation-list ul-reset">
+                   	<li class="navigation-item ib">
+                        <a href="/" class="navigation-link">
+						Home
+					</a>
+					</li>
+                    <li class="navigation-item ib">
+                        <a href="/fire_map" class="navigation-link">
+						Fire Viewer
+					</a>
+                    </li>
+                    <li class="navigation-item ib">
+                        <a href="/prevent" class="navigation-link">
+						Prevent and Survive
+					</a>
+					</li>
 
-<!-- <header>
-	<h1>How to Survive<br> Wild Fire</h1>
-</header> -->
+                </ul>
+            </div>
+        </nav>
+    </header>
 
-<header class="otherTwo">
-		<h2 ><a href="/">Wild Fire</a></h2>
-		<nav>
-			<ul>
-				<li><a href="/prevent" class="current">Survive</a></li>
-				<li><a href="/fire_map" >Fire Viewer</a></li>
-			</ul>
-		</nav>
-</header>
+    <div class='wrapper itemprevent'>
+        <fieldset class="majorpoints">
+            <legend class="majorpointslegend">Leave the area</legend>
+            <div class="mylist" style="display:none">
+                Don’t wait around to see how things develop. Wildfires are so powerful, unpredictable, and destructive, that even well-equipped and trained professional fire fighters die when they become trapped by an onrushing blaze that overruns their position.
+            </div>
+        </fieldset>
+    </div>
 
-<main>
-	<article>
-		<h3 id="1" class="hoverclass" onmouseover="hoverOver(this)" onmouseout="hoverNot(this)">Leave the area</h3>
-		<p id="p1" class="hoverclass hide">Don't wait around to see how things develop. Wildfires are so powerful, unpredictable, and destructive, that even well-equipped and trained professional fire fighters die when they become trapped by an onrushing blaze that overruns their position.
-		</p>
+    <div class='wrapper itemprevent'>
+        <fieldset class="majorpoints">
+            <legend class="majorpointslegend">Maintain situational awareness</legend>
+            <div class="mylist" style="display:none">
+                Be aware of what's going on around you at all times. Simple but crucial.
+            </div>
+        </fieldset>
+    </div>
 
-		<h3 id="2" class="hoverclass" onmouseover="hoverOver(this)" onmouseout="hoverNot(this)">Maintain situational awareness</h3>
-		<p id="p2" class="hoverclass hide">Be aware of what's going on around you at all times. Simple but crucial.</p>
+    <div class='wrapper itemprevent'>
+        <fieldset class="majorpoints">
+            <legend class="majorpointslegend">Choose downhill routes</legend>
+            <div class="mylist" style="display:none">
+                Fire moves faster uphill due to updrafts.
+            </div>
+        </fieldset>
+    </div>
+
+    <div class='wrapper itemprevent'>
+        <fieldset class="majorpoints">
+            <legend class="majorpointslegend" >Plan ahead</legend>
+            <div class="mylist" style="display:none">
+                Identify escape routes/safe zones where you could take shelter if a fire came roaring through the area. Safe zones include rivers, lakes (get in the water), or large level spots out in the open away from combustible material. Heat rises, so the safest zones are those that are downhill of the fire.
+            </div>
+        </fieldset>
+    </div>
+
+    <div class='wrapper itemprevent'>
+        <fieldset class="majorpoints">
+            <legend class="majorpointslegend" >Save yourselves!</legend>
+            <div class="mylist" style="display:none">
+                If you are trapped above a fire, get out as fast as you can. Don't try to save any of your gear. Gear is replaceable, lives are not.
+            </div>
+        </fieldset>
+    </div>
+
+    <div class='wrapper itemprevent'>
+        <fieldset class="majorpoints">
+            <legend class="majorpointslegend" >Stay out of canyons</legend>
+            <div class="mylist" style="display:none">
+                Look for an escape route that leads downhill, but do not follow canyons, chutes or draws, as these act as chimneys that funnel deadly heat up the hill toward you.
+            </div>
+        </fieldset>
+    </div>
 
 
-		<h3 id="3" class="hoverclass" onmouseover="hoverOver(this)" onmouseout="hoverNot(this)">Choose downhill routes</h3>
-		<p id="p3" class="hoverclass hide">Fire moves faster uphill due to updrafts.</p>
+    <div class='wrapper itemprevent'>
+        <fieldset class="majorpoints">
+            <legend class="majorpointslegend" >Get low</legend>
+            <div class="mylist" style="display:none">
+                If the flames are upon you, seek low ground - in a ditch or the notch in a forest road that will allow the superheated convective current to pass overhead. The lower you are the better your chances might be.
+            </div>
+        </fieldset>
+    </div>
 
-		<h3 id="4" class="hoverclass" onmouseover="hoverOver(this)" onmouseout="hoverNot(this)">Plan ahead</h3>
-		<p id="p4" class="hoverclass hide">	Identify escape routes/safe zones where you could take shelter if a fire came roaring through the area. Safe zones include rivers, lakes (get in the water), or large level spots out in the open away from combustible material. Heat rises, so the safest zones are those that are downhill of the fire.</p>
+    <div class='wrapper itemprevent'>
+        <fieldset class="majorpoints">
+            <legend class="majorpointslegend" >Makeshift respirator</legend>
+            <div class="mylist" style="display:none">
+                Breathe inside your clothing next to your body to protect your respiratory tract so you don't inhale hot gasses.
+            </div>
+        </fieldset>
+    </div>
 
-		<h3 id="5" class="hoverclass" onmouseover="hoverOver(this)" onmouseout="hoverNot(this)">Save yourselves!</h3>
-		<p id="p5" class="hoverclass hide">If you are trapped above a fire, get out as fast as you can. Don't try to save any of your gear. Gear is replaceable, lives are not.
-		</p>
+     <div class='wrapper itemprevent'>
+        <fieldset class="majorpoints">
+            <legend class="majorpointslegend" >Find burned-out area</legend>
+            <div class="mylist" style="display:none">
+                If you can find an area that has already burned over, leaving no residual fuel to reignite, that might be a safe place. But the ambient temperature of the scorched earth, rocks and timber will feel like an oven. Watch overhead to avoid snags and standing dead trees that might fall on you..
+            </div>
+        </fieldset>
+    </div>
 
-		<h3 id="6" class="hoverclass" onmouseover="hoverOver(this)" onmouseout="hoverNot(this)">Stay out of canyons</h3>
-		<p id="p6" class="hoverclass hide">Look for an escape route that leads downhill, but do not follow canyons, chutes or draws, as these act as chimneys that funnel deadly heat up the hill toward you.
-		</p>
 
-		<h3 id="7" class="hoverclass" onmouseover="hoverOver(this)" onmouseout="hoverNot(this)">Get low</h3>
-		<p id="p7" class="hoverclass hide">If the flames are upon you, seek low ground - in a ditch or the notch in a forest road that will allow the superheated convective current to pass overhead. The lower you are the better your chances might be.
+     <div class='wrapper itemprevent'>
+        <fieldset class="majorpoints">
+            <legend class="majorpointslegend" >Emergency fire shelter</legend>
+            <div class="mylist" style="display:none">
+                As a last resort or when escape is no longer an option, firefighters use a fire shelter.  It’s a highly-portable dome-shaped foil covering to hide under as the fire passes over. These shelters claim to reflect 95% of radiant heat. They’re fairly compact and lightweight, and cost $300-$400. But when a wall of fire is roaring toward you at 70 miles per hour, sounding like Hell’s freight train, and live embers are raining down like flaming hailstones, 400 bucks might not seem like a lot. 
+            </div>
+        </fieldset>
+    </div>
+    <!-- /.main -->
+    <footer class="footer" style='margin-top:40px'>
+        <div class="wrapper">
+            <small>&copy; 2017 by: Paiju Chang / Sicun Chen / Shaung Cheng / Lihan Zhu</small>
+        </div>
+    </footer>
+    <!-- /.footer -->
+   <script type="text/javascript" >
+    	$('.majorpoints').click(function(){
+    console.log($( this ).find(".subclass"))
+    $( this ).find( '.mylist' ).show();
+   
+});
+    	
+    </script>
 
-		<h3 id="9" class="hoverclass" onmouseover="hoverOver(this)" onmouseout="hoverNot(this)">Makeshift respirator</h3>
-		<p id="p9" class="hoverclass hide">Breathe inside your clothing next to your body to protect your respiratory tract so you don't inhale hot gasses.
-		</p>
-
-		<h3 id="10" class="hoverclass" onmouseover="hoverOver(this)" onmouseout="hoverNot(this)">Find burned-out area</h3>
-		<p id="p10" class="hoverclass hide">If you can find an area that has already burned over, leaving no residual fuel to reignite, that might be a safe place. But the ambient temperature of the scorched earth, rocks and timber will feel like an oven. Watch overhead to avoid snags and standing dead trees that might fall on you.
-		</p>
-
-		<h3 id="11" class="hoverclass" onmouseover="hoverOver(this)" onmouseout="hoverNot(this)">Emergency fire shelter</h3>
-		<p id="p11" class="hoverclass hide">If you can find an area that has already burned over, leaving no residual fuel to reignite, that might be a safe place. But the ambient temperature of the scorched earth, rocks and timber will feel like an oven. Watch overhead to avoid snags and standing dead trees that might fall on you.
-		</p>
-
-	</article>
-</main>
-
-<footer id="footer">
-	<small>&copy; 2017 by: Paiju Chang / Sicun Chen / Shaung Cheng / Lihan Zhu</small>
-</footer>
-<script type="text/javascript">
-    (function() {
-        // Variables
-        var $curve = document.getElementById("curve");
-        var last_known_scroll_position = 0;
-        var defaultCurveValue = 350;
-        var curveRate = 3;
-        var ticking = false;
-        var curveValue;
-
-        // Handle the functionality
-        function scrollEvent(scrollPos) {
-            if (scrollPos >= 0 && scrollPos < defaultCurveValue) {
-                curveValue = defaultCurveValue - parseFloat(scrollPos / curveRate);
-                $curve.setAttribute(
-                    "d",
-                    "M 800 300 Q 400 " + curveValue + " 0 300 L 0 0 L 800 0 L 800 300 Z"
-                );
-            }
-        }
-
-        // Scroll Listener
-        // https://developer.mozilla.org/en-US/docs/Web/Events/scroll
-        window.addEventListener("scroll", function(e) {
-            last_known_scroll_position = window.scrollY;
-
-            if (!ticking) {
-                window.requestAnimationFrame(function() {
-                    scrollEvent(last_known_scroll_position);
-                    ticking = false;
-                });
-            }
-
-            ticking = true;
-        });
-    })();
-
-</script>
 </body>
 
 </html>
